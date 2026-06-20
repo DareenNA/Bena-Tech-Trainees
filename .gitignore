@@ -25,3 +25,8 @@ dist-ssr
 # Local env files
 .env
 .env*.local
+
+# Supabase
+supabase/.temp/
+.supabase/
+
