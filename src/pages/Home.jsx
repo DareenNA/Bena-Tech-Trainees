@@ -145,14 +145,26 @@ const Home = () => {
             </div>
 
             {/* Bento 3: Automation */}
-            <div className="bento-card" style={{ gridColumn: 'span 12', minHeight: '500px' }}>
+            <div className="bento-card" style={{ gridColumn: 'span 6', minHeight: '400px' }}>
               <div className="bento-image-wrap">
                 <img src="/assets/bento_2.png" alt="Automation" />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%)' }}></div>
               </div>
-              <div className="bento-content" style={{ justifyContent: 'flex-end', alignItems: 'center', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Business Automation</h3>
-                <p style={{ color: 'var(--text-grey)', fontSize: '1.2rem', maxWidth: '600px' }}>Eliminate manual friction. We connect your tools and build custom pipelines to unlock growth.</p>
+              <div className="bento-content" style={{ justifyContent: 'flex-end' }}>
+                <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Business Automation</h3>
+                <p style={{ color: 'var(--text-grey)', fontSize: '1.1rem' }}>Eliminate manual friction. We connect your tools and build custom pipelines to unlock growth.</p>
+              </div>
+            </div>
+
+            {/* Bento 4: ERP */}
+            <div className="bento-card" style={{ gridColumn: 'span 6', minHeight: '400px' }}>
+              <div className="bento-image-wrap">
+                <img src="/assets/benatech_erp_1200x600.png" alt="ERP Integration" />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%)' }}></div>
+              </div>
+              <div className="bento-content" style={{ justifyContent: 'flex-end' }}>
+                <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Enterprise Resource Planning</h3>
+                <p style={{ color: 'var(--text-grey)', fontSize: '1.1rem' }}>Tailoring platforms (Odoo, ERPNext) to align with your business flows.</p>
               </div>
             </div>
 
