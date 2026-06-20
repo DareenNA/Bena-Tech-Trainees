@@ -38,7 +38,7 @@ const Home = () => {
         </div>
 
         {/* Hero 3D Render */}
-        <div className="reveal-up" style={{ width: '100%', maxWidth: '1400px', margin: '4rem auto 0 auto', padding: '0 2rem', position: 'relative' }}>
+        <div className="reveal-up hero-image-container" style={{ width: '100%', maxWidth: '1400px', margin: '4rem auto 0 auto', padding: '0 2rem', position: 'relative' }}>
           <div style={{
             position: 'absolute',
             inset: '0 2rem',

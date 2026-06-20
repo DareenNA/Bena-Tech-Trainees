@@ -155,3 +155,66 @@ body {
 }
 
 a { color: inherit; text-decoration: none; }
+
+/* Responsive Mobile Layouts */
+@media (max-width: 768px) {
+  section {
+    padding: 4rem 0 !important;
+  }
+  
+  /* Reduce header top padding on mobile */
+  section:first-of-type {
+    padding-top: 120px !important;
+  }
+
+  .display-1 {
+    font-size: 2.2rem;
+  }
+
+  .display-2 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+
+  .bento-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .bento-card {
+    padding: 2rem 1.5rem !important;
+    grid-column: span 12 !important;
+    min-height: auto !important;
+    border-radius: 20px;
+  }
+
+  .bento-image-wrap img {
+    opacity: 0.35;
+  }
+
+  .bento-content {
+    justify-content: flex-start !important;
+    height: auto !important;
+    gap: 0.5rem;
+  }
+
+  .bento-content h3 {
+    font-size: 1.6rem !important;
+  }
+
+  .hero-image-container {
+    padding: 0 1rem !important;
+    margin-top: 2rem !important;
+  }
+
+  .hero-image-container img {
+    height: 240px !important;
+    border-radius: 16px;
+  }
+  
+  .hero-image-container div {
+    inset: 0 1rem !important;
+  }
+}
+
