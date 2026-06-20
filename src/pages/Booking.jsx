@@ -185,7 +185,7 @@ const Booking = () => {
               </div>
               <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Protocol Confirmed.</h3>
               <p style={{ color: 'var(--text-grey)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-                Your meeting has been locked in for <strong>{new Date(selectedTimeSlot?.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong> at <strong>{selectedTimeSlot?.time_slot}</strong> ({meetingType === 'online' ? 'Remote' : 'On-site'}). A Google Calendar invitation has been queued for your inbox.
+                Your meeting has been locked in for <strong>{new Date(selectedTimeSlot?.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong> at <strong>{selectedTimeSlot?.time_slot}</strong>. A Google Calendar invitation has been queued for your inbox.
               </p>
               <button onClick={resetForm} className="btn btn-secondary" style={{ padding: '0.8rem 2rem' }}>
                 Schedule Another Meeting
@@ -248,11 +248,6 @@ const Booking = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                   <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>2</div>
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Select Availability</h3>
-                </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', padding: '0.4rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-                  <button type="button" onClick={() => setMeetingType('online')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'online' ? 'var(--text-white)' : 'transparent', color: meetingType === 'online' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>Remote</button>
-                  <button type="button" onClick={() => setMeetingType('inperson')} style={{ flex: 1, padding: '0.8rem', borderRadius: '8px', border: 'none', background: meetingType === 'inperson' ? 'var(--text-white)' : 'transparent', color: meetingType === 'inperson' ? '#000' : 'var(--text-white)', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s' }}>On-site</button>
                 </div>
 
                 {loading ? (
