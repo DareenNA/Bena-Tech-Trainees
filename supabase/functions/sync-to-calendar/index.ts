@@ -90,7 +90,12 @@ serve(async (req) => {
 
     // 5. Call Google Calendar API to insert event
     const calendarId = Deno.env.get("GOOGLE_CALENDAR_ID") ?? "primary";
-    let googleRes = await fetch(
+    
+    let googleRes;
+    let googleData;
+    
+    // Attempt 1: Full event (attendees + Google Meet)
+    googleRes = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?conferenceDataVersion=1`,
       {
         method: "POST",
@@ -101,12 +106,11 @@ serve(async (req) => {
         body: JSON.stringify(event),
       }
     );
+    googleData = await googleRes.json();
 
-    let googleData = await googleRes.json();
-    
-    // Fallback: If service account is blocked from inviting attendees, retry without attendees
+    // Attempt 2: If Attempt 1 failed due to attendees, try without attendees (but keep Meet)
     if (!googleRes.ok && googleData.error?.message?.includes("Service accounts cannot invite attendees")) {
-      console.warn("Service account cannot invite attendees without Domain-Wide Delegation. Retrying event creation without attendees...");
+      console.warn("Service account cannot invite attendees without Domain-Wide Delegation. Retrying without attendees...");
       const eventWithoutAttendees = { ...event, attendees: undefined };
       googleRes = await fetch(
         `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?conferenceDataVersion=1`,
@@ -117,6 +121,28 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(eventWithoutAttendees),
+        }
+      );
+      googleData = await googleRes.json();
+    }
+
+    // Attempt 3: If still failing (e.g. due to conferenceData / Google Meet permission), try with no attendees AND no Google Meet
+    if (!googleRes.ok) {
+      console.warn(`Event creation failed (Code: ${googleRes.status}). Retrying barebones event creation (no attendees, no Google Meet)...`);
+      const barebonesEvent = { 
+        ...event, 
+        attendees: undefined,
+        conferenceData: undefined
+      };
+      googleRes = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(barebonesEvent),
         }
       );
       googleData = await googleRes.json();
