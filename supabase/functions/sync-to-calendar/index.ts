@@ -90,7 +90,7 @@ serve(async (req) => {
 
     // 5. Call Google Calendar API to insert event
     const calendarId = Deno.env.get("GOOGLE_CALENDAR_ID") ?? "primary";
-    const googleRes = await fetch(
+    let googleRes = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?conferenceDataVersion=1`,
       {
         method: "POST",
@@ -102,7 +102,26 @@ serve(async (req) => {
       }
     );
 
-    const googleData = await googleRes.json();
+    let googleData = await googleRes.json();
+    
+    // Fallback: If service account is blocked from inviting attendees, retry without attendees
+    if (!googleRes.ok && googleData.error?.message?.includes("Service accounts cannot invite attendees")) {
+      console.warn("Service account cannot invite attendees without Domain-Wide Delegation. Retrying event creation without attendees...");
+      const eventWithoutAttendees = { ...event, attendees: undefined };
+      googleRes = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?conferenceDataVersion=1`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(eventWithoutAttendees),
+        }
+      );
+      googleData = await googleRes.json();
+    }
+
     if (!googleRes.ok) {
       throw new Error(`Google Calendar API Error: ${googleData.error?.message || JSON.stringify(googleData)}`);
     }
