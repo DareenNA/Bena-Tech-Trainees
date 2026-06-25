@@ -164,6 +164,82 @@ serve(async (req) => {
       console.error(`Failed to update booking table with Google Event ID: ${updateError.message}`);
     }
 
+    // 7. Send confirmation email via Resend
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (resendApiKey) {
+      try {
+        const senderEmail = Deno.env.get("SENDER_EMAIL") || "onboarding@resend.dev";
+        const emailRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: `Bena Tech <${senderEmail}>`,
+            to: [booking.email],
+            subject: "Meeting Confirmation - Bena Tech",
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff; color: #1f2937;">
+                <div style="text-align: center; margin-bottom: 24px;">
+                  <h2 style="color: #ea580c; font-size: 24px; font-weight: 700; margin: 0;">Meeting Confirmed</h2>
+                  <p style="color: #6b7280; font-size: 14px; margin: 4px 0 0 0;">Thank you for scheduling a meeting with Bena Tech.</p>
+                </div>
+                
+                <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+                  <h3 style="font-size: 16px; font-weight: 600; margin-top: 0; margin-bottom: 12px; color: #111827;">Meeting Details</h3>
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280; width: 120px;">Client Name</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827;">${booking.first_name} ${booking.last_name}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Date</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827;">${slot.date}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Time Slot</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827;">${slot.time_slot}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Meeting Type</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827;">${booking.meeting_type === 'online' ? 'Online (Google Meet)' : 'On-site'}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Primary Interest</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827; text-transform: capitalize;">${booking.interest}</td>
+                    </tr>
+                  </table>
+                </div>
+
+                <div style="font-size: 14px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
+                  <p>Our team will reach out with the Google Meet link or on-site coordination details prior to our meeting time.</p>
+                  <p>If you need to change or reschedule, please reach out to us at <a href="mailto:info@bena-tech.com" style="color: #ea580c; text-decoration: none;">info@bena-tech.com</a> or via WhatsApp.</p>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+                
+                <div style="text-align: center; font-size: 12px; color: #9ca3af;">
+                  <p style="margin: 0;">&copy; ${new Date().getFullYear()} Bena Tech. All rights reserved.</p>
+                </div>
+              </div>
+            `,
+          }),
+        });
+
+        if (!emailRes.ok) {
+          const emailErr = await emailRes.text();
+          console.error(`Resend API Error: ${emailErr}`);
+        } else {
+          console.log(`Successfully sent confirmation email to ${booking.email}`);
+        }
+      } catch (err) {
+        console.error("Failed to send email via Resend:", err);
+      }
+    } else {
+      console.warn("RESEND_API_KEY is not set. Skipping confirmation email.");
+    }
+
     return new Response(JSON.stringify({ success: true, googleEventId }), {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
