@@ -45,7 +45,7 @@ const AdminResetPassword = () => {
       setSuccess(true);
       setLoading(false);
       setTimeout(() => {
-        navigate('/admin/dashboard', { replace: true });
+        navigate('/admin', { replace: true });
       }, 2000);
     }
   };
@@ -106,7 +106,7 @@ const AdminResetPassword = () => {
             lineHeight: '1.5'
           }}>
             Password updated successfully!<br />
-            Redirecting to dashboard...
+            Redirecting to sign in...
           </div>
         ) : (
           <form onSubmit={handleReset} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
