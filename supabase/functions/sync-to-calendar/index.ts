@@ -182,6 +182,7 @@ serve(async (req) => {
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff; color: #1f2937;">
                 <div style="text-align: center; margin-bottom: 24px;">
+                  <img src="https://bena-tech.com/email_banner.png" alt="Bena Tech" style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto 24px auto; border-radius: 8px;" />
                   <h2 style="color: #ea580c; font-size: 24px; font-weight: 700; margin: 0;">Meeting Confirmed</h2>
                   <p style="color: #6b7280; font-size: 14px; margin: 4px 0 0 0;">Thank you for scheduling a meeting with Bena Tech.</p>
                 </div>
