@@ -25,10 +25,13 @@ const Booking = () => {
   useEffect(() => {
     fetchSlots();
 
-    gsap.fromTo('.reveal-up', 
-      { y: 30, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.reveal-up', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', delay: 0.2 }
+      );
+    });
+    return () => ctx.revert();
   }, []);
 
   const fetchSlots = async () => {

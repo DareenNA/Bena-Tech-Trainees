@@ -7,12 +7,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   useEffect(() => {
-    // Ultra-smooth Apple-style reveals
-    gsap.fromTo('.reveal-up', 
-      { y: 30, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 0.2 },
-      "<0.1"
-    );
+    const ctx = gsap.context(() => {
+      // Ultra-smooth Apple-style reveals
+      gsap.fromTo('.reveal-up', 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 0.2 }
+      );
+    });
+    return () => ctx.revert();
   }, []);
 
   return (

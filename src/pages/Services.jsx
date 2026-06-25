@@ -29,10 +29,13 @@ const ExpandableRow = ({ title, desc }) => {
 
 const Services = () => {
   useEffect(() => {
-    gsap.fromTo('.reveal-up', 
-      { y: 40, opacity: 0 }, 
-      { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 0.2 }
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.reveal-up', 
+        { y: 40, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: 'power3.out', delay: 0.2 }
+      );
+    });
+    return () => ctx.revert();
   }, []);
 
   return (
