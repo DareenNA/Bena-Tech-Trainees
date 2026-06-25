@@ -186,7 +186,7 @@ const Booking = () => {
               }}>
                 ✓
               </div>
-              <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Protocol Confirmed.</h3>
+              <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Booking Confirmed.</h3>
               <p style={{ color: 'var(--text-grey)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
                 Your meeting has been locked in for <strong>{new Date(selectedTimeSlot?.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong> at <strong>{selectedTimeSlot?.time_slot}</strong>. A Google Calendar invitation has been queued for your inbox.
               </p>
