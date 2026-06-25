@@ -35,15 +35,8 @@ const Navbar = () => {
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <span style={{
-              fontSize: '1.4rem',
-              fontWeight: 700,
-              letterSpacing: '-0.03em',
-              color: 'var(--text-white)'
-            }}>
-              bena-tech
-            </span>
+          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.png" alt="BENA" style={{ height: '28px', objectFit: 'contain' }} />
           </Link>
 
           {/* Desktop Nav */}
