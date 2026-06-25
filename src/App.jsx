@@ -36,9 +36,9 @@ function AppContent() {
       {!isAdminRoute && <Navbar />}
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/about" replace />} />
-          <Route path="/about" element={<Home />} />
-          <Route path="/services" element={<Services />} />
+          <Route path="/" element={<Navigate to="/booking" replace />} />
+          <Route path="/about" element={null} />
+          <Route path="/services" element={null} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={

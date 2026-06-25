@@ -18,8 +18,8 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' }
+    { name: 'About', path: 'https://bena-tech.com/about', external: true },
+    { name: 'Services', path: 'https://bena-tech.com/services', external: true }
   ];
 
   return (
@@ -35,23 +35,43 @@ const Navbar = () => {
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
+          <a href="https://bena-tech.com/about" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="BENA" style={{ height: '28px', objectFit: 'contain' }} />
-          </Link>
+          </a>
 
           {/* Desktop Nav */}
           <div className="d-none d-md-flex" style={{ display: 'none', gap: '2.5rem', alignItems: 'center' }}>
             {navLinks.map((item) => {
+              const style = { 
+                fontWeight: 500, 
+                fontSize: '0.9rem', 
+                color: 'var(--text-grey)',
+                transition: 'color 0.2s',
+                textDecoration: 'none'
+              };
+              
+              if (item.external) {
+                return (
+                  <a
+                    key={item.name}
+                    href={item.path}
+                    style={style}
+                    onMouseEnter={(e) => e.target.style.color = 'var(--text-white)'}
+                    onMouseLeave={(e) => e.target.style.color = 'var(--text-grey)'}
+                  >
+                    {item.name}
+                  </a>
+                );
+              }
+
               const isActive = location.pathname === item.path;
               return (
                 <Link 
                   key={item.name} 
                   to={item.path} 
                   style={{ 
-                    fontWeight: 500, 
-                    fontSize: '0.9rem', 
-                    color: isActive ? 'var(--text-white)' : 'var(--text-grey)',
-                    transition: 'color 0.2s'
+                    ...style,
+                    color: isActive ? 'var(--text-white)' : 'var(--text-grey)'
                   }}
                   onMouseEnter={(e) => e.target.style.color = 'var(--text-white)'}
                   onMouseLeave={(e) => e.target.style.color = isActive ? 'var(--text-white)' : 'var(--text-grey)'}
