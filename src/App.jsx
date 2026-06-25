@@ -6,6 +6,7 @@ import Services from './pages/Services';
 import Booking from './pages/Booking';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminResetPassword from './pages/AdminResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
@@ -41,6 +42,7 @@ function AppContent() {
           <Route path="/services" element={null} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/reset-password" element={<AdminResetPassword />} />
           <Route path="/admin/dashboard" element={
             <ProtectedRoute>
               <AdminDashboard />
