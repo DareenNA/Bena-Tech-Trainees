@@ -61,10 +61,54 @@ serve(async (req) => {
       "https://www.googleapis.com/auth/calendar"
     );
 
+    // Parse primary client emails
+    const clientEmails: string[] = [];
+    if (booking.email) {
+      booking.email
+        .split(/[,;]+/)
+        .map((e: string) => e.trim())
+        .forEach((e: string) => {
+          if (e && !clientEmails.includes(e)) {
+            clientEmails.push(e);
+          }
+        });
+    }
+
+    // Parse guest list (names & emails)
+    const guests = booking.guests || [];
+    const guestEmails = guests
+      .map((g: any) => g.email?.trim())
+      .filter(Boolean);
+
+    // List of admins to invite and email
+    const adminEmails = [
+      "a.nasser@bena-tech.com",
+      "Dareen@bena.tech.com",
+      Deno.env.get("ADMIN_EMAIL_1") ?? "",
+      Deno.env.get("ADMIN_EMAIL_2") ?? ""
+    ]
+      .map((e: string) => e.trim())
+      .filter(Boolean);
+
+    // Combine all unique emails (case-insensitive deduplication)
+    const allEmailsMap = new Map();
+    clientEmails.forEach(e => allEmailsMap.set(e.toLowerCase(), e));
+    guestEmails.forEach((e: string) => allEmailsMap.set(e.toLowerCase(), e));
+    adminEmails.forEach(e => allEmailsMap.set(e.toLowerCase(), e));
+
+    const uniqueEmails = Array.from(allEmailsMap.values());
+    const attendees = uniqueEmails.map(email => ({ email }));
+
+    // Build guest list text for description
+    let guestListText = "";
+    if (guests.length > 0) {
+      guestListText = "\n\nGuests Joining:\n" + guests.map((g: any) => `- ${g.name || "Unnamed"} (${g.email})`).join("\n");
+    }
+
     // 4. Create Calendar Event Payload
     const event = {
       summary: `BenaTech Alignment: ${booking.first_name} ${booking.last_name}`,
-      description: `Primary Interest: ${booking.interest.toUpperCase()}\nMeeting Type: ${booking.meeting_type === "online" ? "Remote" : "On-site"}\nClient Email: ${booking.email}`,
+      description: `Primary Interest: ${booking.interest.toUpperCase()}\nMeeting Type: ${booking.meeting_type === "online" ? "Remote" : "On-site"}\nClient Email: ${booking.email}${guestListText}`,
       start: {
         dateTime: start.toISOString(),
         timeZone: "UTC",
@@ -73,11 +117,7 @@ serve(async (req) => {
         dateTime: end.toISOString(),
         timeZone: "UTC",
       },
-      attendees: [
-        { email: booking.email },
-        { email: Deno.env.get("ADMIN_EMAIL_1") ?? "" }, // Your email
-        { email: Deno.env.get("ADMIN_EMAIL_2") ?? "" }, // Partner email
-      ].filter(a => a.email), // Filter out empty emails
+      attendees: attendees,
       conferenceData: booking.meeting_type === "online" ? {
         createRequest: {
           requestId: `benatech-${booking.id}`,
@@ -177,7 +217,7 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             from: `Bena Tech <${senderEmail}>`,
-            to: [booking.email],
+            to: uniqueEmails,
             subject: "Meeting Confirmation - Bena Tech",
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 12px; background-color: #ffffff; color: #1f2937;">
@@ -232,7 +272,7 @@ serve(async (req) => {
           const emailErr = await emailRes.text();
           console.error(`Resend API Error: ${emailErr}`);
         } else {
-          console.log(`Successfully sent confirmation email to ${booking.email}`);
+          console.log(`Successfully sent confirmation email to ${uniqueEmails.join(', ')}`);
         }
       } catch (err) {
         console.error("Failed to send email via Resend:", err);

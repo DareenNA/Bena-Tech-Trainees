@@ -17,6 +17,7 @@ const Booking = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [interest, setInterest] = useState('');
+  const [guests, setGuests] = useState([]);
 
   // UI Status
   const [submitting, setSubmitting] = useState(false);
@@ -78,7 +79,8 @@ const Booking = () => {
           last_name: lastName,
           email: email,
           interest: interest,
-          meeting_type: meetingType
+          meeting_type: meetingType,
+          guests: guests
         });
 
       if (bookingError) throw bookingError;
@@ -112,6 +114,7 @@ const Booking = () => {
     setLastName('');
     setEmail('');
     setInterest('');
+    setGuests([]);
     setSelectedDate(null);
     setSelectedTimeSlot(null);
     setSuccess(false);
@@ -231,6 +234,56 @@ const Booking = () => {
                   placeholder="Work Email" 
                   style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', marginBottom: '1.5rem', transition: 'border-color 0.3s' }} 
                 />
+
+                {/* Guest List Section */}
+                <div style={{ marginBottom: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: guests.length > 0 ? '1.2rem' : '0' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>Additional Guests</span>
+                    <button 
+                      type="button" 
+                      onClick={() => setGuests([...guests, { name: '', email: '' }])}
+                      style={{ background: 'transparent', border: 'none', color: 'var(--primary-orange)', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', outline: 'none' }}
+                    >
+                      + Add Guest
+                    </button>
+                  </div>
+
+                  {guests.map((guest, index) => (
+                    <div key={index} style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: index === guests.length - 1 ? '0' : '1rem' }}>
+                      <input 
+                        type="text" 
+                        required 
+                        value={guest.name}
+                        onChange={(e) => {
+                          const newGuests = [...guests];
+                          newGuests[index].name = e.target.value;
+                          setGuests(newGuests);
+                        }}
+                        placeholder="Guest Name" 
+                        style={{ flex: 1, padding: '0.8rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '0.9rem', outline: 'none' }} 
+                      />
+                      <input 
+                        type="email" 
+                        required 
+                        value={guest.email}
+                        onChange={(e) => {
+                          const newGuests = [...guests];
+                          newGuests[index].email = e.target.value;
+                          setGuests(newGuests);
+                        }}
+                        placeholder="Guest Email" 
+                        style={{ flex: 1.2, padding: '0.8rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '0.9rem', outline: 'none' }} 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setGuests(guests.filter((_, i) => i !== index))}
+                        style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontSize: '1.2rem', padding: '0 0.4rem', outline: 'none', display: 'flex', alignItems: 'center' }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
 
                 <select 
                   required 
