@@ -56,7 +56,8 @@ serve(async (req) => {
     }
 
     // Try to get token with impersonation (needed to generate Google Meet link)
-    const impersonationEmail = Deno.env.get("ADMIN_EMAIL_1") || "info@bena-tech.com";
+    // We impersonate the official info@bena-tech.com account which has active Workspace delegation
+    const impersonationEmail = "info@bena-tech.com";
     let token = "";
     try {
       token = await getGoogleOAuth2Token(
