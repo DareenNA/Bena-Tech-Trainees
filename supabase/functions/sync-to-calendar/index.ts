@@ -193,6 +193,7 @@ serve(async (req) => {
     }
 
     const googleEventId = googleData.id;
+    const hangoutLink = googleData.hangoutLink || "";
 
     // 6. Update booking row with google_event_id
     const { error: updateError } = await supabaseClient
@@ -250,11 +251,28 @@ serve(async (req) => {
                       <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Primary Interest</td>
                       <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #111827; text-transform: capitalize;">${booking.interest}</td>
                     </tr>
+                    ${hangoutLink ? `
+                    <tr>
+                      <td style="padding: 6px 0; font-size: 14px; color: #6b7280;">Meeting Link</td>
+                      <td style="padding: 6px 0; font-size: 14px; font-weight: 500; color: #ea580c;"><a href="${hangoutLink}" target="_blank" style="color: #ea580c; text-decoration: none; font-weight: 600;">Go to Google Meet</a></td>
+                    </tr>
+                    ` : ''}
                   </table>
                 </div>
 
+                ${hangoutLink ? `
+                <div style="text-align: center; margin: 30px 0; padding: 24px; border: 1px dashed #ea580c; border-radius: 12px; background-color: #fffaf7;">
+                  <p style="margin: 0 0 12px 0; font-size: 14px; color: #4b5563; font-weight: 600;">Your Google Meet Link:</p>
+                  <a href="${hangoutLink}" target="_blank" style="background-color: #ea580c; color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-block; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);">Join Google Meet</a>
+                  <p style="margin: 10px 0 0 0; font-size: 12px; color: #9ca3af;">(The waiting room will open automatically at the scheduled time)</p>
+                </div>
+                ` : `
                 <div style="font-size: 14px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
-                  <p>Our team will reach out with the Google Meet link or on-site coordination details prior to our meeting time.</p>
+                  <p>${booking.meeting_type === 'online' ? 'Our team will reach out with the Google Meet link prior to our meeting time.' : 'Our team will reach out with on-site coordination details prior to our meeting time.'}</p>
+                </div>
+                `}
+
+                <div style="font-size: 14px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
                   <p>If you need to change or reschedule, please reach out to us at <a href="mailto:info@bena-tech.com" style="color: #ea580c; text-decoration: none;">info@bena-tech.com</a> or via WhatsApp.</p>
                 </div>
 
