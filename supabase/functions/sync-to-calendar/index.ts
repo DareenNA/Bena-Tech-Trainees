@@ -55,11 +55,25 @@ serve(async (req) => {
       throw new Error("Missing GOOGLE_SERVICE_ACCOUNT environment variables in Supabase.");
     }
 
-    const token = await getGoogleOAuth2Token(
-      googleServiceAccount.client_email,
-      googleServiceAccount.private_key,
-      "https://www.googleapis.com/auth/calendar"
-    );
+    // Try to get token with impersonation (needed to generate Google Meet link)
+    const impersonationEmail = Deno.env.get("ADMIN_EMAIL_1") || "info@bena-tech.com";
+    let token = "";
+    try {
+      token = await getGoogleOAuth2Token(
+        googleServiceAccount.client_email,
+        googleServiceAccount.private_key,
+        "https://www.googleapis.com/auth/calendar",
+        impersonationEmail
+      );
+      console.log(`Successfully generated impersonated token for ${impersonationEmail}`);
+    } catch (err) {
+      console.warn(`Impersonation failed: ${err.message}. Falling back to direct service account auth (No Google Meet links can be created).`);
+      token = await getGoogleOAuth2Token(
+        googleServiceAccount.client_email,
+        googleServiceAccount.private_key,
+        "https://www.googleapis.com/auth/calendar"
+      );
+    }
 
     // Parse primary client emails
     const clientEmails: string[] = [];
@@ -313,20 +327,31 @@ serve(async (req) => {
 });
 
 // Helper: Sign Google JWT for OAuth 2.0 Access Token
-async function getGoogleOAuth2Token(clientEmail: string, privateKey: string, scope: string): Promise<string> {
+async function getGoogleOAuth2Token(clientEmail: string, privateKey: string, scope: string, subject?: string): Promise<string> {
   const header = {
     alg: "RS256",
     typ: "JWT",
   };
 
   const now = Math.floor(Date.now() / 1000);
-  const claim = {
+  interface GoogleClaim {
+    iss: string;
+    scope: string;
+    aud: string;
+    exp: number;
+    iat: number;
+    sub?: string;
+  }
+  const claim: GoogleClaim = {
     iss: clientEmail,
     scope: scope,
     aud: "https://oauth2.googleapis.com/token",
     exp: now + 3600,
     iat: now,
   };
+  if (subject) {
+    claim.sub = subject;
+  }
 
   // Convert private key format
   const pemHeader = "-----BEGIN PRIVATE KEY-----";
