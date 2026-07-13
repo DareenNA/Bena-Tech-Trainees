@@ -22,6 +22,7 @@ const translations = {
     linkedin: 'LinkedIn',
     location: 'Location',
     location_val: 'Saudi Arabia, Jeddah',
+    cr_number: 'C.R.',
 
     // Booking Page - Right Pane
     booking_confirmed: 'Booking Confirmed.',
@@ -96,6 +97,7 @@ const translations = {
     linkedin: 'لينكد إن',
     location: 'الموقع',
     location_val: 'المملكة العربية السعودية، جدة',
+    cr_number: 'سجل تجاري',
 
     // Booking Page - Right Pane
     booking_confirmed: 'تم تأكيد الحجز.',

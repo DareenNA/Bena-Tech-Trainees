@@ -23,6 +23,23 @@ const Footer = () => {
           <p style={{ lineHeight: 1.6, color: 'var(--text-grey)', maxWidth: '280px' }}>
             {t('hero_subtitle')}
           </p>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-grey)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              background: 'rgba(231, 73, 4, 0.08)', 
+              color: 'var(--primary-orange)', 
+              padding: '2px 6px', 
+              borderRadius: '4px', 
+              border: '1px solid rgba(231, 73, 4, 0.2)', 
+              fontSize: '0.7rem', 
+              fontWeight: 600,
+              letterSpacing: '0.05em'
+            }}>
+              {t('cr_number')}
+            </span>
+            <span style={{ letterSpacing: '0.02em' }}>7054745042</span>
+          </div>
           <p style={{ fontSize: '0.8rem', opacity: 0.6 }}>
             &copy; {new Date().getFullYear()} Bena Tech. {t('rights_reserved')}
           </p>
