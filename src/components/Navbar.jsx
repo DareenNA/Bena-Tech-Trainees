@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
@@ -83,17 +83,25 @@ const Navbar = () => {
               );
             })}
             
+            <Link to="/booking" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
+              {t('book_meeting')}
+            </Link>
+
             {/* Language Toggle */}
             <button 
               onClick={toggleLanguage} 
               className="btn-lang"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '0.5rem 0.8rem',
+                fontSize: '0.85rem'
+              }}
             >
-              {language === 'en' ? 'العربية' : 'English'}
+              <Globe size={15} />
+              <span>{language === 'en' ? 'العربية' : 'English'}</span>
             </button>
-
-            <Link to="/booking" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
-              {t('book_meeting')}
-            </Link>
           </div>
 
           {/* Mobile Toggle */}
