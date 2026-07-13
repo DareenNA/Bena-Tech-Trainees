@@ -9,14 +9,18 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminResetPassword from './pages/AdminResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
+import { useLanguage } from './context/LanguageContext';
 
-const Footer = () => (
-  <footer style={{ padding: '4rem 0', borderTop: '1px solid var(--border-color)', textAlign: 'center', color: 'var(--text-grey)' }}>
-    <div className="container">
-      <p style={{ fontSize: '0.9rem' }}>&copy; {new Date().getFullYear()} Bena Tech. All rights reserved.</p>
-    </div>
-  </footer>
-);
+const Footer = () => {
+  const { t } = useLanguage();
+  return (
+    <footer style={{ padding: '4rem 0', borderTop: '1px solid var(--border-color)', textAlign: 'center', color: 'var(--text-grey)' }}>
+      <div className="container">
+        <p style={{ fontSize: '0.9rem' }}>&copy; {new Date().getFullYear()} Bena Tech. {t('rights_reserved')}</p>
+      </div>
+    </footer>
+  );
+};
 
 function ScrollToTop() {
   const { pathname } = useLocation();

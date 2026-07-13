@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Ultra-smooth Apple-style reveals
@@ -179,16 +181,30 @@ const Home = () => {
         <div className="container" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', alignItems: 'center' }}>
           
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Email us</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('email_us')}</p>
             <a href="mailto:info@bena-tech.com" style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
               info@bena-tech.com
             </a>
           </div>
 
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>WhatsApp</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('whatsapp')}</p>
             <a href="https://wa.me/966502600558" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
               +966 50 260 0558
+            </a>
+          </div>
+
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('x_twitter')}</p>
+            <a href="https://x.com/bena_tech?s=11&t=gfGcupOvStZcN-39cfpEpQ" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
+              @bena_tech
+            </a>
+          </div>
+
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('linkedin')}</p>
+            <a href="https://www.linkedin.com/company/bena-tech/" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-white)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary-orange)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-white)'}>
+              Bena Tech
             </a>
           </div>
 

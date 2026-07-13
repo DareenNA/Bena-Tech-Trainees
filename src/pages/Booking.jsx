@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import gsap from 'gsap';
+import { useLanguage } from '../context/LanguageContext';
 
 const Booking = () => {
+  const { language, t } = useLanguage();
+
   // Database States
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -133,34 +136,48 @@ const Booking = () => {
         padding: '3rem', 
         flexDirection: 'column', 
         justifyContent: 'space-between',
-        borderRight: '1px solid var(--border-color)',
+        borderInlineEnd: '1px solid var(--border-color)',
         overflow: 'hidden'
       }}>
         {/* Background Image */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <img src="/assets/hero_3d.png" alt="Architecture" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%)' }}></div>
+          <div style={{ 
+            position: 'absolute', 
+            inset: 0, 
+            background: language === 'ar'
+              ? 'linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%)'
+              : 'linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%)'
+          }}></div>
         </div>
 
         <div style={{ position: 'relative', zIndex: 1, marginTop: '80px' }}>
-          <h1 className="display-1 reveal-up" style={{ marginBottom: '1rem' }}>Book a meeting.</h1>
+          <h1 className="display-1 reveal-up" style={{ marginBottom: '1rem' }}>{t('book_meeting_title')}</h1>
           <p className="text-grey reveal-up" style={{ fontSize: '1.2rem', maxWidth: '400px', lineHeight: 1.6 }}>
-            Schedule a technical alignment with our architecture team. We don't do sales pitches, we architect solutions.
+            {t('book_meeting_desc')}
           </p>
         </div>
 
         <div className="reveal-up" style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Duration</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>2 Hours</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('duration')}</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>{t('duration_val')}</p>
           </div>
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>Email us</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('email_us')}</p>
             <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="mailto:info@bena-tech.com" style={{ color: 'inherit', textDecoration: 'none' }}>info@bena-tech.com</a></p>
           </div>
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>WhatsApp</p>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('whatsapp')}</p>
             <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://wa.me/966502600558" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>+966 50 260 0558</a></p>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('x_twitter')}</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://x.com/bena_tech?s=11&t=gfGcupOvStZcN-39cfpEpQ" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@bena_tech</a></p>
+          </div>
+          <div>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('linkedin')}</p>
+            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://www.linkedin.com/company/bena-tech/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Bena Tech</a></p>
           </div>
         </div>
       </div>
@@ -169,7 +186,7 @@ const Booking = () => {
       <div style={{ flex: 1, padding: '8rem 4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '100%', maxWidth: '500px' }}>
           
-          <h2 className="reveal-up d-md-none display-2" style={{ marginBottom: '3rem' }}>Book Meeting</h2>
+          <h2 className="reveal-up d-md-none display-2" style={{ marginBottom: '3rem' }}>{t('book_meeting')}</h2>
 
           {success ? (
             /* Success State */
@@ -189,12 +206,15 @@ const Booking = () => {
               }}>
                 ✓
               </div>
-              <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>Booking Confirmed.</h3>
+              <h3 className="display-2" style={{ fontSize: '2rem', marginBottom: '1rem' }}>{t('booking_confirmed')}</h3>
               <p style={{ color: 'var(--text-grey)', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-                Your meeting has been locked in for <strong>{new Date(selectedTimeSlot?.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong> at <strong>{selectedTimeSlot?.time_slot}</strong>. A Google Calendar invitation has been queued for your inbox.
+                {t('booking_confirmed_desc', {
+                  date: new Date(selectedTimeSlot?.date).toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                  time: selectedTimeSlot?.time_slot
+                })}
               </p>
               <button onClick={resetForm} className="btn btn-secondary" style={{ padding: '0.8rem 2rem' }}>
-                Schedule Another Meeting
+                {t('schedule_another')}
               </button>
             </div>
           ) : (
@@ -204,7 +224,7 @@ const Booking = () => {
               <div className="reveal-up" style={{ marginBottom: '4rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                   <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>1</div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Client Details</h3>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>{t('client_details')}</h3>
                 </div>
                 
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
@@ -213,7 +233,7 @@ const Booking = () => {
                     required 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="First Name" 
+                    placeholder={t('first_name')} 
                     style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
                   />
                   <input 
@@ -221,7 +241,7 @@ const Booking = () => {
                     required 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Last Name" 
+                    placeholder={t('last_name')} 
                     style={{ flex: 1, padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', transition: 'border-color 0.3s' }} 
                   />
                 </div>
@@ -231,20 +251,20 @@ const Booking = () => {
                   required 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Work Email" 
+                  placeholder={t('work_email')} 
                   style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', marginBottom: '1.5rem', transition: 'border-color 0.3s' }} 
                 />
 
                 {/* Guest List Section */}
                 <div style={{ marginBottom: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.2rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: guests.length > 0 ? '1.2rem' : '0' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>Additional Guests</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 500 }}>{t('additional_guests')}</span>
                     <button 
                       type="button" 
                       onClick={() => setGuests([...guests, { name: '', email: '' }])}
                       style={{ background: 'transparent', border: 'none', color: 'var(--primary-orange)', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', outline: 'none' }}
                     >
-                      + Add Guest
+                      {t('add_guest')}
                     </button>
                   </div>
 
@@ -259,7 +279,7 @@ const Booking = () => {
                           newGuests[index].name = e.target.value;
                           setGuests(newGuests);
                         }}
-                        placeholder="Guest Name" 
+                        placeholder={t('guest_name')} 
                         style={{ flex: 1, padding: '0.8rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '0.9rem', outline: 'none' }} 
                       />
                       <input 
@@ -271,7 +291,7 @@ const Booking = () => {
                           newGuests[index].email = e.target.value;
                           setGuests(newGuests);
                         }}
-                        placeholder="Guest Email" 
+                        placeholder={t('guest_email')} 
                         style={{ flex: 1.2, padding: '0.8rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '0.9rem', outline: 'none' }} 
                       />
                       <button 
@@ -291,11 +311,11 @@ const Booking = () => {
                   onChange={(e) => setInterest(e.target.value)}
                   style={{ width: '100%', padding: '1.2rem', background: 'transparent', border: '1px solid var(--border-color)', borderBottom: '1px solid var(--text-grey)', color: 'var(--text-white)', fontSize: '1rem', outline: 'none', appearance: 'none' }}
                 >
-                  <option value="" disabled style={{ background: '#000' }}>Select Primary Interest...</option>
-                  <option value="web" style={{ background: '#000' }}>Web Development</option>
-                  <option value="automation" style={{ background: '#000' }}>Business Automation</option>
-                  <option value="mobile" style={{ background: '#000' }}>Mobile Systems</option>
-                  <option value="erp" style={{ background: '#000' }}>Enterprise Resource Planning</option>
+                  <option value="" disabled style={{ background: '#000' }}>{t('select_interest')}</option>
+                  <option value="web" style={{ background: '#000' }}>{t('web_dev')}</option>
+                  <option value="automation" style={{ background: '#000' }}>{t('business_auto')}</option>
+                  <option value="mobile" style={{ background: '#000' }}>{t('mobile_systems')}</option>
+                  <option value="erp" style={{ background: '#000' }}>{t('erp')}</option>
                 </select>
               </div>
 
@@ -303,13 +323,13 @@ const Booking = () => {
               <div className="reveal-up" style={{ marginBottom: '4rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
                   <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--text-white)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700 }}>2</div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>Select Availability</h3>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>{t('select_availability')}</h3>
                 </div>
 
                 {loading ? (
-                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem' }}>Loading open sessions...</p>
+                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem' }}>{t('loading_sessions')}</p>
                 ) : uniqueDates.length === 0 ? (
-                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', padding: '1rem 0' }}>No available dates published at the moment. Please contact us directly at info@bena-tech.com.</p>
+                  <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', padding: '1rem 0' }}>{t('no_dates_published')}</p>
                 ) : (
                   <>
                     {/* Date horizontal selector */}
@@ -340,7 +360,9 @@ const Booking = () => {
                               transition: 'all 0.2s' 
                             }}
                           >
-                            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>{dateObj.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                            <span style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                              {dateObj.toLocaleDateString(language === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'short' })}
+                            </span>
                             <span style={{ fontSize: '1.4rem', fontWeight: 500 }}>{dateObj.getDate()}</span>
                           </button>
                         )
@@ -389,7 +411,7 @@ const Booking = () => {
                   padding: '1.2rem' 
                 }}
               >
-                {submitting ? 'Initiating...' : 'Confirm Schedule'}
+                {submitting ? t('initiating') : t('confirm_schedule')}
               </button>
             </form>
           )}

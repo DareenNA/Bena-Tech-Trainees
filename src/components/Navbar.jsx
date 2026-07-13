@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -18,8 +20,8 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'About', path: 'https://bena-tech.com/about', external: true },
-    { name: 'Services', path: 'https://bena-tech.com/services', external: true }
+    { name: t('about'), path: 'https://bena-tech.com/about', external: true },
+    { name: t('services'), path: 'https://bena-tech.com/services', external: true }
   ];
 
   return (
@@ -80,8 +82,17 @@ const Navbar = () => {
                 </Link>
               );
             })}
+            
+            {/* Language Toggle */}
+            <button 
+              onClick={toggleLanguage} 
+              className="btn-lang"
+            >
+              {language === 'en' ? 'العربية' : 'English'}
+            </button>
+
             <Link to="/booking" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
-              Book Meeting
+              {t('book_meeting')}
             </Link>
           </div>
 
@@ -95,6 +106,58 @@ const Navbar = () => {
           </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100vh',
+        background: 'rgba(0, 0, 0, 0.95)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        zIndex: 999,
+        display: isOpen ? 'flex' : 'none',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '2.5rem',
+        transition: 'all 0.3s ease',
+      }}>
+        {navLinks.map((item) => (
+          <a
+            key={item.name}
+            href={item.path}
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 500,
+              color: 'var(--text-white)',
+              textDecoration: 'none'
+            }}
+            onClick={() => setIsOpen(false)}
+          >
+            {item.name}
+          </a>
+        ))}
+        <Link 
+          to="/booking" 
+          className="btn btn-secondary" 
+          style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}
+          onClick={() => setIsOpen(false)}
+        >
+          {t('book_meeting')}
+        </Link>
+        
+        {/* Mobile Language Toggle */}
+        <button 
+          onClick={() => { toggleLanguage(); setIsOpen(false); }} 
+          className="btn-lang"
+          style={{ fontSize: '1rem', padding: '0.6rem 1.2rem' }}
+        >
+          {language === 'en' ? 'العربية' : 'English'}
+        </button>
+      </div>
 
       <style>{`
         @media (min-width: 768px) {
