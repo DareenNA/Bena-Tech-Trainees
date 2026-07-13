@@ -20,6 +20,8 @@ const translations = {
     whatsapp: 'WhatsApp',
     x_twitter: 'X (Twitter)',
     linkedin: 'LinkedIn',
+    location: 'Location',
+    location_val: 'Saudi Arabia, Jeddah',
 
     // Booking Page - Right Pane
     booking_confirmed: 'Booking Confirmed.',
@@ -92,6 +94,8 @@ const translations = {
     whatsapp: 'واتساب',
     x_twitter: 'منصة X',
     linkedin: 'لينكد إن',
+    location: 'الموقع',
+    location_val: 'المملكة العربية السعودية، جدة',
 
     // Booking Page - Right Pane
     booking_confirmed: 'تم تأكيد الحجز.',

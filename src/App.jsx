@@ -19,10 +19,10 @@ const Footer = () => {
         {/* Contact Cards Grid */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
           gap: '1.5rem', 
           marginBottom: '5rem',
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           margin: '0 auto 5rem auto'
         }}>
           {/* Email Card */}
@@ -59,6 +59,15 @@ const Footer = () => {
             </span>
             <span className="footer-label">{t('linkedin')}</span>
             <span className="footer-value">Bena Tech</span>
+          </a>
+
+          {/* Location Card */}
+          <a href="https://maps.google.com/?q=Saudi+Arabia+Jeddah" target="_blank" rel="noopener noreferrer" className="footer-card">
+            <span className="footer-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span className="footer-label">{t('location')}</span>
+            <span className="footer-value">{t('location_val')}</span>
           </a>
         </div>
 
