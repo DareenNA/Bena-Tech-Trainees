@@ -73,7 +73,7 @@ const translations = {
     mobile_apps_desc: 'Native experiences that users actually want to use.',
     bus_automation: 'Business Automation',
     bus_automation_desc: 'Eliminate manual friction. We connect your tools and build custom pipelines to unlock growth.',
-    erp_desc: 'Tailoring platforms (Odoo, ERPNext) to align with your business flows.',
+    erp_desc: 'Tailoring enterprise platforms to align with your business flows.',
   },
   ar: {
     // Navbar
@@ -145,17 +145,35 @@ const translations = {
     mobile_apps_desc: 'تجارب أصلية يرغب المستخدمون فعلياً في استخدامها.',
     bus_automation: 'أتمتة الأعمال',
     bus_automation_desc: 'تخلص من الاحتكاك اليدوي. نربط أدواتك ونبني مسارات مخصصة لتحرير النمو.',
-    erp_desc: 'تطويع المنصات (Odoo, ERPNext) لتتوافق مع تدفقات أعمالك.',
+    erp_desc: 'تطويع المنصات المؤسسية لتتوافق مع تدفقات أعمالك.',
   }
 };
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
+    // 1. Check URL query parameters
+    const params = new URLSearchParams(window.location.search);
+    const urlLang = params.get('lang');
+    if (urlLang === 'en' || urlLang === 'ar') {
+      document.cookie = `language=${urlLang};path=/;domain=.bena-tech.com;max-age=31536000`;
+      localStorage.setItem('language', urlLang);
+      return urlLang;
+    }
+
+    // 2. Check wildcard subdomain cookie
+    const match = document.cookie.match(new RegExp('(^| )language=([^;]+)'));
+    if (match && (match[2] === 'en' || match[2] === 'ar')) {
+      localStorage.setItem('language', match[2]);
+      return match[2];
+    }
+
+    // 3. Fallback to localStorage or default to English
     return localStorage.getItem('language') || 'en';
   });
 
   useEffect(() => {
     localStorage.setItem('language', language);
+    document.cookie = `language=${language};path=/;domain=.bena-tech.com;max-age=31536000`;
     const dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
