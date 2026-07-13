@@ -158,24 +158,6 @@ const Booking = () => {
           </p>
         </div>
 
-        <div className="reveal-up" style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-          <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('email_us')}</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="mailto:info@bena-tech.com" style={{ color: 'inherit', textDecoration: 'none' }}>info@bena-tech.com</a></p>
-          </div>
-          <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('whatsapp')}</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://wa.me/966502600558" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>+966 50 260 0558</a></p>
-          </div>
-          <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('x_twitter')}</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://x.com/bena_tech?s=11&t=gfGcupOvStZcN-39cfpEpQ" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>@bena_tech</a></p>
-          </div>
-          <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('linkedin')}</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="https://www.linkedin.com/company/bena-tech/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Bena Tech</a></p>
-          </div>
-        </div>
       </div>
 
       {/* Right Pane - Scrollable Booking Flow */}
