@@ -20,8 +20,8 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: t('about'), path: `https://bena-tech.com/about?lang=${language}`, external: true },
-    { name: t('services'), path: `https://bena-tech.com/services?lang=${language}`, external: true }
+    { name: t('about'), path: 'https://bena-tech.com/about', external: true },
+    { name: t('services'), path: 'https://bena-tech.com/services', external: true }
   ];
 
   return (
@@ -37,7 +37,7 @@ const Navbar = () => {
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <a href={`https://bena-tech.com/about?lang=${language}`} style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
+          <a href="https://bena-tech.com/about" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="BENA" style={{ height: '28px', objectFit: 'contain' }} />
           </a>
 

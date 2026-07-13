@@ -151,29 +151,22 @@ const translations = {
 
 export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState(() => {
-    // 1. Check URL query parameters
-    const params = new URLSearchParams(window.location.search);
-    const urlLang = params.get('lang');
-    if (urlLang === 'en' || urlLang === 'ar') {
-      document.cookie = `language=${urlLang};path=/;domain=.bena-tech.com;max-age=31536000`;
-      localStorage.setItem('language', urlLang);
-      return urlLang;
-    }
-
-    // 2. Check wildcard subdomain cookie
-    const match = document.cookie.match(new RegExp('(^| )language=([^;]+)'));
-    if (match && (match[2] === 'en' || match[2] === 'ar')) {
-      localStorage.setItem('language', match[2]);
-      return match[2];
-    }
-
-    // 3. Fallback to localStorage or default to English
-    return localStorage.getItem('language') || 'en';
+    const match = document.cookie.match(/(?:^|; )language=([^;]*)/);
+    const cookieLang = match ? match[1] : null;
+    return cookieLang || localStorage.getItem('language') || 'en';
   });
 
   useEffect(() => {
     localStorage.setItem('language', language);
-    document.cookie = `language=${language};path=/;domain=.bena-tech.com;max-age=31536000`;
+    
+    // Write cookie for subdomain sharing (works for both bena-tech.com and bookingg.bena-tech.com)
+    const hostname = window.location.hostname;
+    if (hostname.includes('bena-tech.com')) {
+      document.cookie = `language=${language}; path=/; domain=.bena-tech.com; max-age=31536000; SameSite=Lax; Secure`;
+    } else {
+      document.cookie = `language=${language}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+
     const dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
