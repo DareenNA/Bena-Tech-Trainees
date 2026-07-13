@@ -408,14 +408,14 @@ const Booking = () => {
             padding: 6rem 1.5rem 4rem 1.5rem;
           }
           .name-container {
-            flex-direction: column;
+            flex-direction: column !important;
             gap: 1rem !important;
           }
           .name-container input {
             width: 100% !important;
           }
           .guest-row {
-            flex-direction: column;
+            flex-direction: column !important;
             align-items: stretch !important;
             gap: 0.8rem !important;
             border-bottom: 1px dashed var(--border-color);
