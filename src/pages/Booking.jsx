@@ -161,7 +161,7 @@ const Booking = () => {
       </div>
 
       {/* Right Pane - Scrollable Booking Flow */}
-      <div style={{ flex: 1, padding: '8rem 4rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div className="booking-right-pane" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ width: '100%', maxWidth: '500px' }}>
           
           <h2 className="reveal-up d-md-none display-2" style={{ marginBottom: '3rem' }}>{t('book_meeting')}</h2>
@@ -205,7 +205,7 @@ const Booking = () => {
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 500 }}>{t('client_details')}</h3>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+                <div className="name-container" style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                   <input 
                     type="text" 
                     required 
@@ -247,7 +247,7 @@ const Booking = () => {
                   </div>
 
                   {guests.map((guest, index) => (
-                    <div key={index} style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: index === guests.length - 1 ? '0' : '1rem' }}>
+                    <div key={index} className="guest-row" style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', marginBottom: index === guests.length - 1 ? '0' : '1rem' }}>
                       <input 
                         type="text" 
                         required 
@@ -274,6 +274,7 @@ const Booking = () => {
                       />
                       <button 
                         type="button" 
+                        className="guest-delete-btn"
                         onClick={() => setGuests(guests.filter((_, i) => i !== index))}
                         style={{ background: 'transparent', border: 'none', color: '#ff4d4d', cursor: 'pointer', fontSize: '1.2rem', padding: '0 0.4rem', outline: 'none', display: 'flex', alignItems: 'center' }}
                       >
@@ -311,7 +312,7 @@ const Booking = () => {
                 ) : (
                   <>
                     {/* Date horizontal selector */}
-                    <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '2rem', scrollbarWidth: 'none' }}>
+                    <div className="date-selector" style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '1rem', marginBottom: '2rem', scrollbarWidth: 'none' }}>
                       {uniqueDates.map((dateStr) => {
                         const dateObj = new Date(dateStr);
                         const isSelected = selectedDate === dateStr;
@@ -398,8 +399,39 @@ const Booking = () => {
       </div>
 
       <style>{`
+        .booking-right-pane {
+          padding: 8rem 4rem;
+        }
         @media (max-width: 768px) {
           .d-md-flex { display: none !important; }
+          .booking-right-pane {
+            padding: 6rem 1.5rem 4rem 1.5rem;
+          }
+          .name-container {
+            flex-direction: column;
+            gap: 1rem !important;
+          }
+          .name-container input {
+            width: 100% !important;
+          }
+          .guest-row {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 0.8rem !important;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+          }
+          .guest-row input {
+            width: 100% !important;
+          }
+          .guest-delete-btn {
+            align-self: flex-end;
+          }
+        }
+        .date-selector::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
