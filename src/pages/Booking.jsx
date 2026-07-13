@@ -160,10 +160,6 @@ const Booking = () => {
 
         <div className="reveal-up" style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           <div>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('duration')}</p>
-            <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>{t('duration_val')}</p>
-          </div>
-          <div>
             <p style={{ color: 'var(--text-grey)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>{t('email_us')}</p>
             <p style={{ fontSize: '1.1rem', fontWeight: 500 }}><a href="mailto:info@bena-tech.com" style={{ color: 'inherit', textDecoration: 'none' }}>info@bena-tech.com</a></p>
           </div>
