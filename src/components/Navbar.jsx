@@ -20,8 +20,9 @@ const Navbar = () => {
   }, [location]);
 
   const navLinks = [
-    { name: t('about'), path: 'https://bena-tech.com/about', external: true },
-    { name: t('services'), path: 'https://bena-tech.com/services', external: true }
+    { name: t('story_menu'), path: '/story' },
+    { name: t('about'), path: '/about' },
+    { name: t('services'), path: '/services' }
   ];
 
   return (
@@ -37,43 +38,24 @@ const Navbar = () => {
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <a href="https://bena-tech.com/about" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
+          <Link to="/" style={{ zIndex: 1001, display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="BENA" style={{ height: '28px', objectFit: 'contain' }} />
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="d-none d-md-flex" style={{ display: 'none', gap: '2.5rem', alignItems: 'center' }}>
             {navLinks.map((item) => {
-              const style = { 
-                fontWeight: 500, 
-                fontSize: '0.9rem', 
-                color: 'var(--text-grey)',
-                transition: 'color 0.2s',
-                textDecoration: 'none'
-              };
-              
-              if (item.external) {
-                return (
-                  <a
-                    key={item.name}
-                    href={item.path}
-                    style={style}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--text-white)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--text-grey)'}
-                  >
-                    {item.name}
-                  </a>
-                );
-              }
-
               const isActive = location.pathname === item.path;
               return (
                 <Link 
                   key={item.name} 
                   to={item.path} 
                   style={{ 
-                    ...style,
-                    color: isActive ? 'var(--text-white)' : 'var(--text-grey)'
+                    fontWeight: 500, 
+                    fontSize: '0.9rem', 
+                    color: isActive ? 'var(--text-white)' : 'var(--text-grey)',
+                    transition: 'color 0.2s',
+                    textDecoration: 'none'
                   }}
                   onMouseEnter={(e) => e.target.style.color = 'var(--text-white)'}
                   onMouseLeave={(e) => e.target.style.color = isActive ? 'var(--text-white)' : 'var(--text-grey)'}
@@ -83,9 +65,9 @@ const Navbar = () => {
               );
             })}
             
-            <Link to="/booking" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
+            <a href="https://bookingg.bena-tech.com/booking" className="btn btn-secondary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}>
               {t('book_meeting')}
-            </Link>
+            </a>
 
             {/* Language Toggle */}
             <button 
@@ -134,9 +116,9 @@ const Navbar = () => {
         transition: 'all 0.3s ease',
       }}>
         {navLinks.map((item) => (
-          <a
+          <Link
             key={item.name}
-            href={item.path}
+            to={item.path}
             style={{
               fontSize: '1.5rem',
               fontWeight: 500,
@@ -146,16 +128,16 @@ const Navbar = () => {
             onClick={() => setIsOpen(false)}
           >
             {item.name}
-          </a>
+          </Link>
         ))}
-        <Link 
-          to="/booking" 
+        <a 
+          href="https://bookingg.bena-tech.com/booking" 
           className="btn btn-secondary" 
           style={{ padding: '0.8rem 2rem', fontSize: '1.1rem' }}
           onClick={() => setIsOpen(false)}
         >
           {t('book_meeting')}
-        </Link>
+        </a>
         
         {/* Mobile Language Toggle */}
         <button 

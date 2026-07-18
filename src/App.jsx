@@ -1,4 +1,3 @@
-// Bena Tech Trainees App Deployment Trigger
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -8,8 +7,8 @@ import Booking from './pages/Booking';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminResetPassword from './pages/AdminResetPassword';
-import Story from './pages/Story';
 import ProtectedRoute from './components/ProtectedRoute';
+import Story from './pages/Story';
 import './index.css';
 import { useLanguage } from './context/LanguageContext';
 
@@ -98,18 +97,18 @@ function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isStoryRoute = location.pathname === '/story';
-  const shouldHideNavFooter = isAdminRoute || isStoryRoute;
+  const hideHeaderFooter = isAdminRoute || isStoryRoute;
 
   return (
     <>
-      {!shouldHideNavFooter && <Navbar />}
+      {!hideHeaderFooter && <Navbar />}
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
-          <Route path="/" element={<Navigate to="/booking" replace />} />
-          <Route path="/about" element={null} />
-          <Route path="/services" element={null} />
-          <Route path="/booking" element={<Booking />} />
+          <Route path="/" element={<Navigate to="/story" replace />} />
           <Route path="/story" element={<Story />} />
+          <Route path="/about" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/booking" element={<Booking />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/reset-password" element={<AdminResetPassword />} />
           <Route path="/admin/dashboard" element={
@@ -119,7 +118,7 @@ function AppContent() {
           } />
         </Routes>
       </main>
-      {!shouldHideNavFooter && <Footer />}
+      {!hideHeaderFooter && <Footer />}
     </>
   );
 }
