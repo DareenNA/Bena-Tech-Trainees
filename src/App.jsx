@@ -7,6 +7,7 @@ import Booking from './pages/Booking';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminResetPassword from './pages/AdminResetPassword';
+import Story from './pages/Story';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 import { useLanguage } from './context/LanguageContext';
@@ -95,16 +96,19 @@ function ScrollToTop() {
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isStoryRoute = location.pathname === '/story';
+  const shouldHideNavFooter = isAdminRoute || isStoryRoute;
 
   return (
     <>
-      {!isAdminRoute && <Navbar />}
+      {!shouldHideNavFooter && <Navbar />}
       <main style={{ minHeight: '100vh', position: 'relative' }}>
         <Routes>
           <Route path="/" element={<Navigate to="/booking" replace />} />
           <Route path="/about" element={null} />
           <Route path="/services" element={null} />
           <Route path="/booking" element={<Booking />} />
+          <Route path="/story" element={<Story />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/reset-password" element={<AdminResetPassword />} />
           <Route path="/admin/dashboard" element={
@@ -114,7 +118,7 @@ function AppContent() {
           } />
         </Routes>
       </main>
-      {!isAdminRoute && <Footer />}
+      {!shouldHideNavFooter && <Footer />}
     </>
   );
 }

@@ -9,6 +9,10 @@
   --border-color: rgba(255, 255, 255, 0.08);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -265,3 +269,265 @@ body[dir="rtl"] {
     gap: 2.5rem;
   }
 }
+
+/* Story Page Animations & Premium Styles */
+@keyframes story-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.story-page .animate-float {
+  animation: story-float 4s ease-in-out infinite;
+}
+
+@keyframes story-pulse-glow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.25; }
+}
+
+.story-page .pulse-glow {
+  animation: story-pulse-glow 6s ease-in-out infinite;
+}
+
+/* Custom scroll reveal and layout helper styles */
+.story-page .animate-reveal {
+  opacity: 0;
+  transform: translateY(35px);
+}
+
+.story-page input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+  opacity: 1;
+}
+
+/* Print rendering styles to prevent sandbox flash */
+#pdf-rendering-sandbox {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Premium Story Page Layouts & Aesthetics */
+.story-page {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background grid mesh */
+.story-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 70px 70px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Glassmorphism Cards */
+.story-page .glass-card {
+  background: rgba(10, 10, 10, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.story-page .glass-card:hover {
+  border-color: rgba(231, 73, 4, 0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 30px 60px rgba(231, 73, 4, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Orb drift keyframes */
+@keyframes orb-drift-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(5%, -8%) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes orb-drift-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-8%, 5%) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.story-page .glow-orb-drift-1 {
+  animation: orb-drift-1 25s ease-in-out infinite;
+}
+
+.story-page .glow-orb-drift-2 {
+  animation: orb-drift-2 30s ease-in-out infinite;
+}
+
+/* Concentric spin keyframes */
+@keyframes story-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.story-page .spin-slow {
+  animation: story-spin 40s linear infinite;
+}
+
+.story-page .spin-slow-reverse {
+  animation: story-spin 25s linear infinite reverse;
+}
+
+.story-page .spin-medium {
+  animation: story-spin 12s linear infinite;
+}
+
+/* ==========================================
+   RESPONSIVE MOBILE FRIENDLY LAYOUT CLASSES
+   ========================================== */
+
+/* Responsive outer section padding */
+.story-page .story-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 1.2rem;
+  position: relative;
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .story-page .story-section {
+    padding: 6rem 5%;
+  }
+}
+
+/* Responsive glassmorphic card padding */
+.story-page .glass-card {
+  background: rgba(10, 10, 10, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .story-page .glass-card {
+    padding: 4rem;
+  }
+}
+
+/* Responsive grid layout stacking */
+.story-page .story-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .story-page .story-grid.two-cols-12-08 {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+  }
+  .story-page .story-grid.two-cols-11-09 {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+  }
+}
+
+/* Responsive timeline items styling */
+.story-page .timeline-container {
+  position: relative;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .story-page .timeline-container {
+    gap: 2.5rem;
+  }
+}
+
+.story-page .timeline-line-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 22px; /* aligns centered with the 46px circle */
+  width: 3px;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.story-page .timeline-node-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .story-page .timeline-node-item {
+    gap: 1.8rem;
+  }
+}
+
+.story-page .timeline-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+@media (min-width: 768px) {
+  .story-page .timeline-text {
+    padding: 1.2rem 2rem;
+    gap: 1.2rem;
+  }
+}
+
+/* Confetti keyframe animation for trainee celebration */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0.1;
+  }
+}
+
+.story-page .confetti-piece {
+  position: absolute;
+  top: -20px;
+  animation: confetti-fall 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+

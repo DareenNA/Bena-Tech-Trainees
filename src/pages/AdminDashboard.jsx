@@ -25,6 +25,14 @@ const AdminDashboard = () => {
   // Message notifications
   const [notification, setNotification] = useState(null);
 
+  // Form State for Sending Emails
+  const [emailRecipient, setEmailRecipient] = useState('');
+  const [emailName, setEmailName] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailTemplate, setEmailTemplate] = useState('general'); // 'general' or 'acceptance'
+  const [emailMessage, setEmailMessage] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
+
   useEffect(() => {
     // Initial fetch
     fetchBookings();
@@ -169,6 +177,49 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    if (!emailRecipient.trim()) {
+      showNotification('Please enter a recipient email address', 'error');
+      return;
+    }
+    if (!emailSubject.trim()) {
+      showNotification('Please enter a subject', 'error');
+      return;
+    }
+    if (!emailMessage.trim()) {
+      showNotification('Please enter a message body', 'error');
+      return;
+    }
+
+    setSendingEmail(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-custom-email', {
+        body: {
+          to: emailRecipient.trim(),
+          name: emailName.trim(),
+          subject: emailSubject.trim(),
+          message: emailMessage,
+          templateType: emailTemplate
+        }
+      });
+
+      if (error) throw error;
+
+      showNotification('🎉 Email sent successfully!');
+      // Clear fields on success except the sender info
+      setEmailRecipient('');
+      setEmailName('');
+      setEmailSubject('');
+      setEmailMessage('');
+    } catch (err) {
+      console.error('Error sending email:', err);
+      showNotification(err.message || 'Failed to send email. Ensure the Edge Function is deployed.', 'error');
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -227,7 +278,7 @@ const AdminDashboard = () => {
         
         {/* Navigation / Actions Card */}
         <div className="bento-card reveal-up" style={{ gridColumn: 'span 12', padding: '1.5rem' }}>
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             <button 
               onClick={() => setActiveTab('bookings')} 
               style={{
@@ -257,6 +308,21 @@ const AdminDashboard = () => {
               }}
             >
               Manage Slots ({slots.length})
+            </button>
+            <button 
+              onClick={() => setActiveTab('email')} 
+              style={{
+                padding: '0.8rem 1.8rem',
+                borderRadius: '12px',
+                border: 'none',
+                background: activeTab === 'email' ? 'var(--text-white)' : 'transparent',
+                color: activeTab === 'email' ? '#000' : 'var(--text-white)',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              Send Email
             </button>
           </div>
         </div>
@@ -538,6 +604,186 @@ const AdminDashboard = () => {
               )}
             </div>
           </>
+        )}
+
+        {/* Tab 3: Custom Email Sender */}
+        {activeTab === 'email' && (
+          <div className="bento-card reveal-up" style={{ gridColumn: 'span 12', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 500, marginBottom: '0.5rem' }}>Send Official Email</h3>
+            <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem', marginBottom: '2rem' }}>
+              Send an email styled with the Bena Tech banner and layout to anyone. Perfect for trainee acceptances, client announcements, or general announcements.
+            </p>
+
+            <form onSubmit={handleSendEmail} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {/* Template Style */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email Style / Template</label>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEmailTemplate('general')}
+                    style={{
+                      flex: 1,
+                      padding: '1rem',
+                      borderRadius: '12px',
+                      border: `1px solid ${emailTemplate === 'general' ? 'var(--primary-orange)' : 'var(--border-color)'}`,
+                      background: emailTemplate === 'general' ? 'rgba(231, 73, 4, 0.1)' : 'rgba(255,255,255,0.02)',
+                      color: emailTemplate === 'general' ? 'var(--primary-orange)' : 'var(--text-white)',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    General Announcement
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEmailTemplate('acceptance')}
+                    style={{
+                      flex: 1,
+                      padding: '1rem',
+                      borderRadius: '12px',
+                      border: `1px solid ${emailTemplate === 'acceptance' ? 'var(--primary-orange)' : 'var(--border-color)'}`,
+                      background: emailTemplate === 'acceptance' ? 'rgba(231, 73, 4, 0.1)' : 'rgba(255,255,255,0.02)',
+                      color: emailTemplate === 'acceptance' ? 'var(--primary-orange)' : 'var(--text-white)',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    Trainee Acceptance 🎉
+                  </button>
+                </div>
+              </div>
+
+              {/* Recipient Email & Name Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recipient Email(s)</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. trainee@example.com (comma separated for multiple)"
+                      value={emailRecipient}
+                      onChange={(e) => setEmailRecipient(e.target.value)}
+                      style={{
+                        padding: '1rem',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px',
+                        color: 'var(--text-white)',
+                        fontSize: '1rem',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recipient Name (Optional)</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Ahmad"
+                      value={emailName}
+                      onChange={(e) => setEmailName(e.target.value)}
+                      style={{
+                        padding: '1rem',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '12px',
+                        color: 'var(--text-white)',
+                        fontSize: '1rem',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subject</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Your Bena Tech Training Acceptance Notice"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  style={{
+                    padding: '1rem',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '12px',
+                    color: 'var(--text-white)',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+
+              {/* Message Body */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--text-grey)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message Body</label>
+                <textarea
+                  required
+                  rows={8}
+                  placeholder={`Write your message here...\nUse new lines to separate paragraphs.\nExample:\nWe are pleased to inform you...\n\nPlease check the attachments...`}
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  style={{
+                    padding: '1rem',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '12px',
+                    color: 'var(--text-white)',
+                    fontSize: '1rem',
+                    lineHeight: '1.5',
+                    outline: 'none',
+                    resize: 'vertical',
+                    fontFamily: 'inherit'
+                  }}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={sendingEmail}
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  padding: '1.2rem',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  marginTop: '1rem',
+                  opacity: sendingEmail ? 0.7 : 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                {sendingEmail ? (
+                  <>
+                    <span className="spinner" style={{
+                      width: '18px',
+                      height: '18px',
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      borderTop: '2px solid #fff',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }}></span>
+                    Sending Email...
+                  </>
+                ) : 'Send Email ✉'}
+                <style>{`
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                `}</style>
+              </button>
+            </form>
+          </div>
         )}
 
       </div>

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اتفاقية تدريب - بينا تيك</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #000000;
+      --primary-orange: #e74904;
+      --text-white: #ffffff;
+      --text-grey: #8a8f98;
+      --border-color: rgba(255, 255, 255, 0.15);
+      --font-family: 'Cairo', 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    body {
+      background-color: #1a1a1a;
+      font-family: var(--font-family);
+      color: var(--text-white);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    /* A4 Page Styling */
+    .page {
+      background-color: var(--bg-color);
+      width: 210mm;
+      height: 297mm;
+      padding: 15mm 15mm 10mm 15mm;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+      page-break-after: always;
+      page-break-inside: avoid;
+      overflow: hidden;
+    }
+
+    /* Header styling */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-grey);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+      font-family: 'Inter', 'Cairo', sans-serif;
+    }
+
+    .page-header .confidential {
+      letter-spacing: 1px;
+    }
+
+    /* Footer styling */
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-grey);
+      border-top: 1px solid var(--border-color);
+      padding-top: 8px;
+      margin-top: 15px;
+      font-family: 'Inter', 'Cairo', sans-serif;
+    }
+
+    .page-footer a {
+      color: var(--text-grey);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .page-footer a:hover {
+      color: var(--primary-orange);
+      text-decoration: underline;
+    }
+
+    /* Page 1 (Cover) specific styles */
+    .cover-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .cover-title {
+      font-size: 46px;
+      font-weight: 800;
+      margin-bottom: 25px;
+      position: relative;
+      color: var(--text-white);
+    }
+
+    .cover-title::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      right: 0;
+      width: 60px;
+      height: 4px;
+      background-color: var(--primary-orange);
+    }
+
+    .cover-meta-table {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 25px;
+    }
+
+    .cover-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 0;
+    }
+
+    .cover-meta-label {
+      text-align: right;
+    }
+
+    .cover-meta-label h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    .cover-meta-label p {
+      font-size: 10px;
+      color: var(--text-grey);
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .cover-meta-value {
+      width: 250px;
+      height: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cover-quote {
+      border-right: 4px solid var(--primary-orange);
+      padding-right: 15px;
+      margin-top: auto;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-white);
+      max-width: 450px;
+      align-self: flex-start;
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    /* Content Pages styling */
+    .content-body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 5px 0;
+    }
+
+    .section-row {
+      display: flex;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .section-num {
+      width: 35px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary-orange);
+      font-family: 'Inter', sans-serif;
+      text-align: left;
+      padding-left: 8px;
+      padding-top: 3px;
+    }
+
+    .section-content {
+      flex-grow: 1;
+      padding-right: 12px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .section-text {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #e0e0e0;
+      text-align: justify;
+    }
+
+    .section-list {
+      margin-top: 4px;
+      list-style: none;
+    }
+
+    .section-list li {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #e0e0e0;
+      margin-bottom: 4px;
+      position: relative;
+      padding-right: 15px;
+    }
+
+    .section-list li::before {
+      content: "—";
+      position: absolute;
+      right: 0;
+      color: var(--primary-orange);
+      font-weight: bold;
+    }
+
+    /* Form Fields Grid */
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 25px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 2px;
+    }
+
+    .form-field label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+
+    .form-field .fill-line {
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+      height: 16px;
+    }
+
+    /* Signatures Section */
+    .signatures-container {
+      margin-top: 15px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+    }
+
+    .signatures-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 10px;
+    }
+
+    .signatures-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .signature-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .signature-box h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 3px;
+    }
+
+    .sig-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 2px;
+    }
+
+    .sig-label {
+      font-size: 11.5px;
+      color: var(--text-grey);
+      width: 50px;
+    }
+
+    .sig-line {
+      flex-grow: 1;
+      height: 16px;
+    }
+
+    /* Print media optimization */
+    @media print {
+      html, body {
+        background-color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 210mm !important;
+        height: auto !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .page {
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        padding: 15mm 15mm 10mm 15mm !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .page-footer a {
+        color: var(--text-grey) !important;
+        text-decoration: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: COVER -->
+  <div class="page">
+    <div class="page-header">
+      <span class="confidential">CONFIDENTIAL | سري</span>
+      <span>2026</span>
+    </div>
+
+    <div class="cover-body">
+      <div class="logo-container">
+        <img class="logo-img" src="file:///c:/Users/User/BenaTech%20Web/public/logo.png" alt="BENA">
+      </div>
+
+      <h1 class="cover-title">اتفاقية تدريب</h1>
+
+      <div class="cover-meta-table">
+        <div class="cover-meta-row">
+          <div class="cover-meta-label">
+            <h3>الرقم الوظيفي</h3>
+            <p>Employee ID</p>
+          </div>
+          <div class="cover-meta-value"></div>
+        </div>
+        <div class="cover-meta-row">
+          <div class="cover-meta-label">
+            <h3>اسم المتدرب</h3>
+            <p>Intern Name</p>
+          </div>
+          <div class="cover-meta-value"></div>
+        </div>
+        <div class="cover-meta-row">
+          <div class="cover-meta-label">
+            <h3>المسمى التدريبي</h3>
+            <p>Position</p>
+          </div>
+          <div class="cover-meta-value"></div>
+        </div>
+        <div class="cover-meta-row">
+          <div class="cover-meta-label">
+            <h3>تاريخ البدء</h3>
+            <p>Start Date</p>
+          </div>
+          <div class="cover-meta-value"></div>
+        </div>
+        <div class="cover-meta-row">
+          <div class="cover-meta-label">
+            <h3>تاريخ الانتهاء</h3>
+            <p>End Date</p>
+          </div>
+          <div class="cover-meta-value"></div>
+        </div>
+      </div>
+
+      <div class="cover-quote">
+        «أنت لا تنضم إلى BENA TECH، بل تساهم في بنائها.»
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span dir="ltr">1 / 4</span>
+      <span>BENA TECH | Confidential | <a href="https://bena-tech.com" target="_blank">bena-tech.com</a></span>
+    </div>
+  </div>
+
+  <!-- PAGE 2: ARTICLES 1 - 5 -->
+  <div class="page">
+    <div class="page-header">
+      <img class="logo-img" src="file:///c:/Users/User/BenaTech%20Web/public/logo.png" alt="BENA" style="height: 22px;">
+      <span>اتفاقية تدريب · سري | Confidential</span>
+    </div>
+
+    <div class="content-body">
+      <!-- Section 1 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">أولاً: الطرف الأول</h2>
+          <p class="section-text">شركة بينا تيك – BENA TECH، ويُشار إليها فيما بعد بـ"الشركة".</p>
+        </div>
+        <div class="section-num">01</div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">ثانياً: الطرف الثاني</h2>
+          <div class="fields-grid">
+            <div class="form-field">
+              <label>اسم المتدرب</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field">
+              <label>رقم الهوية</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field">
+              <label>الجنسية</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field">
+              <label>التخصص</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field">
+              <label>المسمى التدريبي</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field">
+              <label>البريد الإلكتروني</label>
+              <div class="fill-line"></div>
+            </div>
+            <div class="form-field" style="grid-column: span 2;">
+              <label>رقم الجوال</label>
+              <div class="fill-line"></div>
+            </div>
+          </div>
+        </div>
+        <div class="section-num">02</div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">ثالثاً: موضوع الاتفاقية</h2>
+          <p class="section-text">تنظّم هذه الاتفاقية العلاقة التدريبية بين الطرفين، حيث يلتحق الطرف الثاني ببرنامج تدريبي لدى الطرف الأول بهدف اكتساب المهارات والخبرات العملية في مجال تخصصه، وفق الشروط والأحكام الواردة في هذه الاتفاقية.</p>
+        </div>
+        <div class="section-num">03</div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">رابعاً: مدة التدريب</h2>
+          <p class="section-text">تبدأ مدة التدريب من التاريخ الموضح في الاتفاقية وتنتهي بانتهاء المدة المتفق عليها، ويجوز تمديدها أو تعديلها باتفاق كتابي بين الطرفين.</p>
+        </div>
+        <div class="section-num">04</div>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">خامساً: طبيعة التدريب</h2>
+          <ul class="section-list">
+            <li>يُنفّذ التدريب عن بُعد بشكل كامل.</li>
+            <li>يكون التدريب بنظام الدوام الكامل، وعلى ألا يتجاوز إجمالي ساعات التدريب الفعلية (8) ساعات يومياً.</li>
+            <li>يهدف التدريب إلى اكتساب الخبرة العملية.</li>
+            <li>يقر الطرفان بأن هذه الاتفاقية هي اتفاقية تدريب وتأهيل فقط، ولا تنشئ علاقة عمل أو رابطة تعاقدية تخضع لنظام العمل السعودي، ولا يترتب عليها أي التزامات عمالية كالأجور أو الإجازات أو التأمين الطبي أو مكافأة نهاية الخدمة.</li>
+            <li>لا تُعد هذه الاتفاقية ضماناً أو وعداً بالتوظيف بعد انتهاء فترة التدريب.</li>
+          </ul>
+        </div>
+        <div class="section-num">05</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span dir="ltr">2 / 4</span>
+      <span>BENA TECH | Confidential | <a href="https://bena-tech.com" target="_blank">bena-tech.com</a></span>
+    </div>
+  </div>
+
+  <!-- PAGE 3: ARTICLES 6 - 10 -->
+  <div class="page">
+    <div class="page-header">
+      <img class="logo-img" src="file:///c:/Users/User/BenaTech%20Web/public/logo.png" alt="BENA" style="height: 22px;">
+      <span>اتفاقية تدريب · سري | Confidential</span>
+    </div>
+
+    <div class="content-body">
+      <!-- Section 6 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">سادساً: التزامات المتدرب</h2>
+          <ul class="section-list">
+            <li>الالتزام بالمواعيد المحددة للمهام والتسليمات ومتابعتها بدقة.</li>
+            <li>حضور الاجتماعات الدورية المقررة.</li>
+            <li>الالتزام بالسلوك المهني والاحترافية الكاملة في التعامل.</li>
+            <li>عدم تمثيل الشركة أو التحدث باسمها دون إذن كتابي مسبق.</li>
+            <li>استخدام أدوات الشركة وأنظمتها للأغراض المهنية فقط.</li>
+            <li>يلتزم المتدرب فور انتهاء مدة التدريب أو إنهائه لأي سبب كان، أو عند طلب الشركة ذلك، بإعادة كافة الأجهزة والعهد العينية والمستندات الورقية التي سُلمت له لتأدية المهام، بالإضافة إلى تسليم كافة الحسابات والأصول الرقمية فوراً.</li>
+          </ul>
+        </div>
+        <div class="section-num">06</div>
+      </div>
+
+      <!-- Section 7 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">سابعاً: السرية وعدم الإفصاح</h2>
+          <p class="section-text">
+            1. يلتزم المتدرب بالمحافظة على سرية جميع المعلومات التي يّطلع عليها خلال فترة التدريب وعدم الإفصاح عنها لأي طرف ثالث، ويشمل ذلك على سبيل المثال لا الحصر: بيانات العملاء، والعقود، والمشاريع، والمستندات، والمعلومات المالية. ويستمر هذا الالتزام حتى بعد انتهاء الاتفاقية.<br>
+            2. يتحمل المتدرب المسؤولية القانونية الكاملة ويعوض الشركة عن أي أضرار مادية أو معنوية، أو أي غرامات قد تفرضها الجهات التنظيمية على الشركة، نتيجة إهماله الجسيم أو مخالفته لبنود السرية وحماية البيانات الشخصية أو إساءة استخدامه للأنظمة.
+          </p>
+        </div>
+        <div class="section-num">07</div>
+      </div>
+
+      <!-- Section 8 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">ثامناً: الملكية الفكرية</h2>
+          <p class="section-text">يتنازل المتدرب بموجب هذا التنازل النهائي والأبدي وغير المشروط عن كافة حقوق الملكية الفكرية (المادية والأدبية لدرجة ما تسمح به الأنظمة) لكافة الأعمال والابتكارات والحلول التي ينتجها أو يساهم في إنتاجها خلال فترة التدريب لصالح الشركة، بما في ذلك: التصاميم، والمحتوى، والأكواد البرمجية، والمدخلات والبرومبتات الذكية (Prompts)، وخطط العمل، والمستندات، ولا يحق للمتدرب استخدامها أو نشرها دون إذن كتابي مسبق من الشركة.</p>
+        </div>
+        <div class="section-num">08</div>
+      </div>
+
+      <!-- Section 9 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">تاسعاً: عدم استقطاب العملاء والموظفين</h2>
+          <p class="section-text">يتعهد المتدرب بعدم استقطاب أو محاولة توظيف أي من موظفي الشركة أو عملائها، أو تقديم خدمات مباشرة أو غير مباشرة لعملاء الشركة الحاليين الذين تعامل معهم خلال التدريب، وذلك طوال فترة التدريب ولمدة (6 أشهر) من تاريخ انتهائها.</p>
+        </div>
+        <div class="section-num">09</div>
+      </div>
+
+      <!-- Section 10 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">عاشراً: الحسابات والأصول الرقمية</h2>
+          <p class="section-text">تظل جميع الحسابات والأصول الرقمية ملكاً للشركة، ويلتزم المتدرب بتسليم صلاحيات الوصول كاملة عند انتهاء الاتفاقية، ويشمل ذلك: Google Workspace، وGitHub، والبريد الإلكتروني الرسمي، وحسابات التواصل الاجتماعي، وأدوات إدارة المشاريع.</p>
+        </div>
+        <div class="section-num">10</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span dir="ltr">3 / 4</span>
+      <span>BENA TECH | Confidential | <a href="https://bena-tech.com" target="_blank">bena-tech.com</a></span>
+    </div>
+  </div>
+
+  <!-- PAGE 4: ARTICLES 11 - 15 & SIGNATURES -->
+  <div class="page">
+    <div class="page-header">
+      <img class="logo-img" src="file:///c:/Users/User/BenaTech%20Web/public/logo.png" alt="BENA" style="height: 22px;">
+      <span>اتفاقية تدريب · سري | Confidential</span>
+    </div>
+
+    <div class="content-body">
+      <!-- Section 11 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">الحادي عشر: حماية البيانات</h2>
+          <p class="section-text">يلتزم المتدرب بالتعامل مع البيانات الشخصية وبيانات العملاء وفق الأنظمة المعمول بها في المملكة العربية السعودية (بما في ذلك نظام حماية البيانات الشخصية السعودي PDPL)، وعدم نسخها أو نقلها خارج أنظمة الشركة المعتمدة.</p>
+        </div>
+        <div class="section-num">11</div>
+      </div>
+
+      <!-- Section 12 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">الثاني عشر: التقييم وشهادة التدريب</h2>
+          <p class="section-text">
+            1. يخضع المتدرب لتقييم دوري لأدائه، ويحصل عند إتمام فترة التدريب بنجاح على شهادة تدريب معتمدة من الشركة بشرط التزامه بنسبة حضور لا تقل عن (90%)، وحصوله على تقييم أداء عام لا يقل عن (مرضي/مقبول).<br>
+            2. يحق للمتدرب الذي يظهر تميزاً والتزاماً استثنائيين الحصول على خطاب توصية (Recommendation Letter) من الشركة يوضح إنجازاته ومساهماته.
+          </p>
+        </div>
+        <div class="section-num">12</div>
+      </div>
+
+      <!-- Section 13 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">الثالث عشر: إنهاء الاتفاقية</h2>
+          <p class="section-text">يجوز لأي من الطرفين إنهاء هذه الاتفاقية بإشعار كتابي مسبق مدته سبعة (7) أيام. ويحق للشركة الإنهاء الفوري في حال الإخلال بالتزامات السرية، أو إساءة استخدام أصول الشركة، أو تكرار عدم الالتزام بالتوجيهات.</p>
+        </div>
+        <div class="section-num">13</div>
+      </div>
+
+      <!-- Section 14 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">الرابع عشر: الأنظمة المعمول بها والإخطارات وتسوية النزاعات</h2>
+          <p class="section-text">
+            1. تخضع هذه الاتفاقية وتُفسّر وفقاً للأنظمة واللوائح المعمول بها في المملكة العربية السعودية.<br>
+            2. تعتبر كافة الإخطارات والمراسلات المتبادلة بموجب هذه الاتفاقية رسمية ومنتجة لآثارها القانونية إذا تم إرسالها عبر البريد الإلكتروني الرسمي للطرفين الموضح في صدر هذه الاتفاقية.<br>
+            3. في حال نشوء أي خلاف أو نزاع يتعلق بتفسير هذه الاتفاقية أو تنفيذها، يسعى الطرفان لحله ودياً خلال 15 يوماً، وفي حال تعذر ذلك، يتم إحالة النزاع إلى المحاكم المختصة بمدينة جدة.<br>
+          </p>
+        </div>
+        <div class="section-num">14</div>
+      </div>
+
+      <!-- Section 15 -->
+      <div class="section-row">
+        <div class="section-content">
+          <h2 class="section-title">الخامس عشر: الإقرار</h2>
+          <p class="section-text">يقر الطرف الثاني بأنه قرأ هذه الاتفاقية وفهم جميع بنودها ووافق عليها.</p>
+        </div>
+        <div class="section-num">15</div>
+      </div>
+
+      <!-- Signatures Block -->
+      <div class="signatures-container">
+        <h3 class="signatures-title">التوقيعات</h3>
+        <div class="signatures-grid">
+          <!-- First Party -->
+          <div class="signature-box">
+            <h4>الطرف الأول: شركة BENA TECH</h4>
+            <div class="sig-row">
+              <span class="sig-label">الاسم:</span>
+              <div class="sig-line"></div>
+            </div>
+            <div class="sig-row">
+              <span class="sig-label">التوقيع:</span>
+              <div class="sig-line"></div>
+            </div>
+            <div class="sig-row">
+              <span class="sig-label">التاريخ:</span>
+              <div class="sig-line"></div>
+            </div>
+          </div>
+
+          <!-- Second Party -->
+          <div class="signature-box">
+            <h4>الطرف الثاني: المتدرب/المتدربة</h4>
+            <div class="sig-row">
+              <span class="sig-label">الاسم:</span>
+              <div class="sig-line"></div>
+            </div>
+            <div class="sig-row">
+              <span class="sig-label">التوقيع:</span>
+              <div class="sig-line"></div>
+            </div>
+            <div class="sig-row">
+              <span class="sig-label">التاريخ:</span>
+              <div class="sig-line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span dir="ltr">4 / 4</span>
+      <span>BENA TECH | Confidential | <a href="https://bena-tech.com" target="_blank">bena-tech.com</a></span>
+    </div>
+  </div>
+
+</body>
+</html>
