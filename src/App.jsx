@@ -1,3 +1,4 @@
+// Bena Tech Trainees App Deployment Trigger
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
