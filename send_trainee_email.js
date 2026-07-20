@@ -62,7 +62,7 @@ const htmlContent = `
     <h2 style="color: #ea580c; font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -0.02em;">Congratulations, ${traineeName}!</h2>
   </div>
   
-  <div style="background-color: #fcfcfc; border: 1px solid #f3f4f6; border-radius: 12px; padding: 24px 24px 8px 24px; margin-bottom: 24px;">
+  <div style="margin-bottom: 24px;">
     ${formattedBody}
   </div>
 
