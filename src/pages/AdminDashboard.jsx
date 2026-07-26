@@ -31,6 +31,8 @@ const AdminDashboard = () => {
   const [emailSubject, setEmailSubject] = useState('');
   const [emailTemplate, setEmailTemplate] = useState('general'); // 'general' or 'acceptance'
   const [emailMessage, setEmailMessage] = useState('');
+  const [emailMeetLink, setEmailMeetLink] = useState('');
+  const [emailMeetButtonText, setEmailMeetButtonText] = useState('Join Google Meet');
   const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
@@ -200,7 +202,9 @@ const AdminDashboard = () => {
           name: emailName.trim(),
           subject: emailSubject.trim(),
           message: emailMessage,
-          templateType: emailTemplate
+          templateType: emailTemplate,
+          meetLink: emailMeetLink.trim(),
+          meetButtonText: emailMeetButtonText.trim()
         }
       });
 
@@ -212,6 +216,8 @@ const AdminDashboard = () => {
       setEmailName('');
       setEmailSubject('');
       setEmailMessage('');
+      setEmailMeetLink('');
+      setEmailMeetButtonText('Join Google Meet');
     } catch (err) {
       console.error('Error sending email:', err);
       showNotification(err.message || 'Failed to send email. Ensure the Edge Function is deployed.', 'error');
@@ -742,6 +748,95 @@ const AdminDashboard = () => {
                     fontFamily: 'inherit'
                   }}
                 />
+              </div>
+
+              {/* Google Meet Link Section (Optional) */}
+              <div style={{
+                background: 'rgba(231, 73, 4, 0.05)',
+                border: '1px solid rgba(231, 73, 4, 0.2)',
+                borderRadius: '12px',
+                padding: '1.2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.2rem' }}>📹</span>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary-orange)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Google Meet Link Button (Optional)
+                    </label>
+                  </div>
+                  {emailMeetLink && (
+                    <button
+                      type="button"
+                      onClick={() => { setEmailMeetLink(''); setEmailMeetButtonText('Join Google Meet'); }}
+                      style={{ background: 'none', border: 'none', color: 'var(--text-grey)', cursor: 'pointer', fontSize: '0.8rem' }}
+                    >
+                      Clear Link ✕
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label style={{ fontSize: '0.75rem', color: 'var(--text-grey)' }}>Google Meet URL</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. https://meet.google.com/abc-defg-hij"
+                      value={emailMeetLink}
+                      onChange={(e) => setEmailMeetLink(e.target.value)}
+                      style={{
+                        padding: '0.8rem 1rem',
+                        background: 'rgba(0, 0, 0, 0.3)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '8px',
+                        color: 'var(--text-white)',
+                        fontSize: '0.95rem',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label style={{ fontSize: '0.75rem', color: 'var(--text-grey)' }}>Button Text in Email</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Join Google Meet"
+                      value={emailMeetButtonText}
+                      onChange={(e) => setEmailMeetButtonText(e.target.value)}
+                      style={{
+                        padding: '0.8rem 1rem',
+                        background: 'rgba(0, 0, 0, 0.3)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '8px',
+                        color: 'var(--text-white)',
+                        fontSize: '0.95rem',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-grey)', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <span>Quick link generator:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!emailMeetLink) setEmailMeetLink('https://meet.google.com/new');
+                    }}
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid var(--border-color)',
+                      color: 'var(--text-white)',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem'
+                    }}
+                  >
+                    + meet.google.com/new
+                  </button>
+                </div>
               </div>
 
               {/* Submit Button */}

@@ -41,7 +41,7 @@ serve(async (req) => {
     }
 
     // 2. Parse request payload
-    const { to, name, subject, message, templateType } = await req.json();
+    const { to, name, subject, message, templateType, meetLink, meetButtonText } = await req.json();
 
     if (!to || !subject || !message) {
       return new Response(JSON.stringify({ error: "Missing required fields (to, subject, message)" }), {
@@ -67,6 +67,24 @@ serve(async (req) => {
       .map((p: string) => `<p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px 0; color: #374151;">${p}</p>`)
       .join("");
 
+    // Setup Google Meet CTA button if link is provided
+    let formattedMeetLink = meetLink ? meetLink.trim() : "";
+    if (formattedMeetLink && !/^https?:\/\//i.test(formattedMeetLink)) {
+      formattedMeetLink = `https://${formattedMeetLink}`;
+    }
+
+    let meetButtonHtml = "";
+    if (formattedMeetLink) {
+      const buttonLabel = (meetButtonText && meetButtonText.trim()) || "Join Google Meet";
+      meetButtonHtml = `
+      <div style="text-align: center; margin: 28px 0; padding: 24px; border: 1px dashed #ea580c; border-radius: 12px; background-color: #fffaf7;">
+        <p style="margin: 0 0 14px 0; font-size: 14px; color: #4b5563; font-weight: 600;">Google Meet Session:</p>
+        <a href="${formattedMeetLink}" target="_blank" style="background-color: #ea580c; color: #ffffff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; display: inline-block; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);">${buttonLabel}</a>
+        <p style="margin: 12px 0 0 0; font-size: 12px; color: #9ca3af;">(Click the button above to join the Google Meet call)</p>
+      </div>
+      `;
+    }
+
     // Set heading text based on template selection
     let headingText = `Hello, ${name || 'Valued Client'}!`;
     if (templateType === "acceptance") {
@@ -83,6 +101,8 @@ serve(async (req) => {
       <div style="margin-bottom: 24px;">
         ${formattedBody}
       </div>
+
+      ${meetButtonHtml}
 
       <div style="text-align: center; border-top: 1px solid #f3f4f6; padding-top: 20px; color: #9ca3af; font-size: 12px;">
         <p style="margin: 0 0 8px 0;">This email was sent by <strong>Bena Tech</strong>.</p>
