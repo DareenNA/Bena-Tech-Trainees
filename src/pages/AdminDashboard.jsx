@@ -644,7 +644,17 @@ const AdminDashboard = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setEmailTemplate('acceptance')}
+                    onClick={() => {
+                      setEmailTemplate('acceptance');
+                      if (!emailSubject) {
+                        setEmailSubject('Welcome to Bena Tech Training Program!');
+                      }
+                      if (!emailMessage) {
+                        setEmailMessage(
+                          `يسعدنا إبلاغك بأنه تم قبولك في برنامج التدريب لدى Bena Tech (بناء تك).\n\n:نرجو منك اتباع الخطوات التالية لإتمام إجراءات الانضمام\n1. الدخول على الرابط التالي: https://bena-tech-trainees.pages.dev/story\n2. تحميل ملف اتفاقية التدريب من نفس الرابط.\n3. تعبئة الملف بالكامل والتوقيع عليه.\n4. إرسال الملف المعبأ على البريد الإلكتروني: info@bena-tech.com\n\nمع خالص التمنيات بالتوفيق،\nفريق Bena Tech`
+                        );
+                      }
+                    }}
                     style={{
                       flex: 1,
                       padding: '1rem',

@@ -47,6 +47,16 @@ if (!resendApiKey) {
 }
 
 // Convert line breaks in the message body to HTML paragraphs with RTL support for Arabic
+const linkify = (text) => {
+  let result = text.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+    return `<a href="${url}" target="_blank" style="color: #0284c7; text-decoration: underline; word-break: break-all;">${url}</a>`;
+  });
+  result = result.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, (email) => {
+    return `<a href="mailto:${email}" style="color: #0284c7; text-decoration: underline;">${email}</a>`;
+  });
+  return result;
+};
+
 const formattedBody = messageBody
   .split('\\n') // support literal '\n' passed from CLI
   .map(paragraph => paragraph.split('\n')) // support actual shell linebreaks
@@ -56,7 +66,8 @@ const formattedBody = messageBody
     const isArabic = /[\u0600-\u06FF]/.test(p);
     const dir = isArabic ? 'rtl' : 'ltr';
     const align = isArabic ? 'right' : 'left';
-    return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${p}</p>`;
+    const linkedText = linkify(p);
+    return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${linkedText}</p>`;
   })
   .join('');
 

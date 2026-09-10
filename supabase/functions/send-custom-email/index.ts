@@ -63,12 +63,24 @@ serve(async (req) => {
       .split(/\r?\n|\\n/)
       .filter((p: string) => p.trim() !== "");
 
+    // Convert URLs and emails into clickable links
+    const linkify = (text: string) => {
+      let result = text.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+        return `<a href="${url}" target="_blank" style="color: #0284c7; text-decoration: underline; word-break: break-all;">${url}</a>`;
+      });
+      result = result.replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, (email) => {
+        return `<a href="mailto:${email}" style="color: #0284c7; text-decoration: underline;">${email}</a>`;
+      });
+      return result;
+    };
+
     const formattedBody = paragraphs
       .map((p: string) => {
         const isArabic = /[\u0600-\u06FF]/.test(p);
         const dir = isArabic ? "rtl" : "ltr";
         const align = isArabic ? "right" : "left";
-        return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${p}</p>`;
+        const linkedText = linkify(p);
+        return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${linkedText}</p>`;
       })
       .join("");
 
