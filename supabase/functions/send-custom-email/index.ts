@@ -64,7 +64,12 @@ serve(async (req) => {
       .filter((p: string) => p.trim() !== "");
 
     const formattedBody = paragraphs
-      .map((p: string) => `<p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px 0; color: #374151;">${p}</p>`)
+      .map((p: string) => {
+        const isArabic = /[\u0600-\u06FF]/.test(p);
+        const dir = isArabic ? "rtl" : "ltr";
+        const align = isArabic ? "right" : "left";
+        return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${p}</p>`;
+      })
       .join("");
 
     // Setup Google Meet CTA button if link is provided
@@ -94,7 +99,7 @@ serve(async (req) => {
     const htmlContent = `
     <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #ffffff; color: #1f2937; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
       <div style="text-align: center; margin-bottom: 24px;">
-        <img src="https://bena-tech.com/email_banner.png" alt="Bena Tech" style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto 24px auto; border-radius: 12px;" />
+        <img src="https://bena-tech-trainees.pages.dev/email_banner.png" alt="Bena Tech" style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto 24px auto; border-radius: 12px;" />
         <h2 style="color: #ea580c; font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -0.02em;">${headingText}</h2>
       </div>
       

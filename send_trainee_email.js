@@ -46,19 +46,24 @@ if (!resendApiKey) {
   process.exit(1);
 }
 
-// Convert line breaks in the message body to HTML paragraphs
+// Convert line breaks in the message body to HTML paragraphs with RTL support for Arabic
 const formattedBody = messageBody
   .split('\\n') // support literal '\n' passed from CLI
   .map(paragraph => paragraph.split('\n')) // support actual shell linebreaks
   .flat()
   .filter(p => p.trim() !== '')
-  .map(p => `<p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px 0; color: #374151;">${p}</p>`)
+  .map(p => {
+    const isArabic = /[\u0600-\u06FF]/.test(p);
+    const dir = isArabic ? 'rtl' : 'ltr';
+    const align = isArabic ? 'right' : 'left';
+    return `<p dir="${dir}" style="font-size: 15px; line-height: 1.8; margin: 0 0 16px 0; color: #374151; direction: ${dir}; text-align: ${align}; font-family: 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, Arial, sans-serif;">${p}</p>`;
+  })
   .join('');
 
 const htmlContent = `
 <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #e5e7eb; border-radius: 16px; background-color: #ffffff; color: #1f2937; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
   <div style="text-align: center; margin-bottom: 24px;">
-    <img src="https://bena-tech.com/email_banner.png" alt="Bena Tech" style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto 24px auto; border-radius: 12px;" />
+    <img src="https://bena-tech-trainees.pages.dev/email_banner.png" alt="Bena Tech" style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto 24px auto; border-radius: 12px;" />
     <h2 style="color: #ea580c; font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -0.02em;">Congratulations, ${traineeName}!</h2>
   </div>
   
