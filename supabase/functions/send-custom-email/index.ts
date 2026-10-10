@@ -114,7 +114,7 @@ serve(async (req) => {
 
     const formattedBody = paragraphs
       .map((p: string) => {
-        const isArabic = /[؀-ۿ]/.test(p);
+        const isArabic = new RegExp("[" + String.fromCharCode(0x0600) + "-" + String.fromCharCode(0x06FF) + "]").test(p);
         const dir = isArabic ? "rtl" : "ltr";
         const align = isArabic ? "right" : "left";
         const linkedText = linkify(p);
