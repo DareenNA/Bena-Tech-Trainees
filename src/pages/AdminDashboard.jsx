@@ -1,7 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import gsap from 'gsap';
+
+// Email attachment limits (kept under Resend's 40MB cap after base64 encoding)
+const MAX_ATTACHMENTS = 5;
+const MAX_ATTACHMENT_TOTAL_BYTES = 10 * 1024 * 1024; // 10 MB total
+
+const formatFileSize = (bytes) => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+// Read a File as a base64 string (without the data: prefix)
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+    reader.onerror = () => reject(new Error(`Could not read file: ${file.name}`));
+    reader.readAsDataURL(file);
+  });
 
 const TIME_PRESETS = [
   '09:30 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -34,6 +53,8 @@ const AdminDashboard = () => {
   const [emailMeetLink, setEmailMeetLink] = useState('');
   const [emailMeetButtonText, setEmailMeetButtonText] = useState('Join Google Meet');
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailFiles, setEmailFiles] = useState([]);
+  const emailFileInputRef = useRef(null);
 
   useEffect(() => {
     // Initial fetch
@@ -179,6 +200,34 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleEmailFilesSelected = (e) => {
+    const picked = Array.from(e.target.files || []);
+    // Allow picking the same file again later
+    e.target.value = '';
+    if (picked.length === 0) return;
+
+    const combined = [...emailFiles];
+    for (const file of picked) {
+      const isDuplicate = combined.some(f => f.name === file.name && f.size === file.size);
+      if (!isDuplicate) combined.push(file);
+    }
+
+    if (combined.length > MAX_ATTACHMENTS) {
+      showNotification(`You can attach up to ${MAX_ATTACHMENTS} files`, 'error');
+      return;
+    }
+    const totalBytes = combined.reduce((sum, f) => sum + f.size, 0);
+    if (totalBytes > MAX_ATTACHMENT_TOTAL_BYTES) {
+      showNotification(`Attachments are too large (max ${formatFileSize(MAX_ATTACHMENT_TOTAL_BYTES)} in total)`, 'error');
+      return;
+    }
+    setEmailFiles(combined);
+  };
+
+  const handleRemoveEmailFile = (index) => {
+    setEmailFiles(emailFiles.filter((_, i) => i !== index));
+  };
+
   const handleSendEmail = async (e) => {
     e.preventDefault();
     if (!emailRecipient.trim()) {
@@ -196,6 +245,14 @@ const AdminDashboard = () => {
 
     setSendingEmail(true);
     try {
+      const attachments = await Promise.all(
+        emailFiles.map(async (file) => ({
+          filename: file.name,
+          content: await fileToBase64(file),
+          contentType: file.type || 'application/octet-stream'
+        }))
+      );
+
       const { data, error } = await supabase.functions.invoke('send-custom-email', {
         body: {
           to: emailRecipient.trim(),
@@ -204,7 +261,8 @@ const AdminDashboard = () => {
           message: emailMessage,
           templateType: emailTemplate,
           meetLink: emailMeetLink.trim(),
-          meetButtonText: emailMeetButtonText.trim()
+          meetButtonText: emailMeetButtonText.trim(),
+          attachments
         }
       });
 
@@ -218,6 +276,7 @@ const AdminDashboard = () => {
       setEmailMessage('');
       setEmailMeetLink('');
       setEmailMeetButtonText('Join Google Meet');
+      setEmailFiles([]);
     } catch (err) {
       console.error('Error sending email:', err);
       showNotification(err.message || 'Failed to send email. Ensure the Edge Function is deployed.', 'error');
@@ -758,6 +817,88 @@ const AdminDashboard = () => {
                     fontFamily: 'inherit'
                   }}
                 />
+              </div>
+
+              {/* Attachments (Optional) */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px dashed var(--border-color)',
+                borderRadius: '12px',
+                padding: '1.2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '1.2rem' }}>📎</span>
+                    <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-white)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Attachments (Optional)
+                    </label>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-grey)' }}>
+                    Up to {MAX_ATTACHMENTS} files, {formatFileSize(MAX_ATTACHMENT_TOTAL_BYTES)} total
+                  </span>
+                </div>
+
+                <input
+                  ref={emailFileInputRef}
+                  type="file"
+                  multiple
+                  onChange={handleEmailFilesSelected}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => emailFileInputRef.current?.click()}
+                  style={{
+                    padding: '0.9rem 1rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '10px',
+                    color: 'var(--text-white)',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  + Choose file(s) to attach
+                </button>
+
+                {emailFiles.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {emailFiles.map((file, index) => (
+                      <div
+                        key={`${file.name}-${index}`}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: '1rem',
+                          padding: '0.6rem 1rem',
+                          background: 'rgba(0, 0, 0, 0.3)',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '8px'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.9rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} dir="auto">
+                          📄 {file.name}
+                        </span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', flexShrink: 0 }}>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-grey)' }}>{formatFileSize(file.size)}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveEmailFile(index)}
+                            style={{ background: 'none', border: 'none', color: 'var(--text-grey)', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem' }}
+                            title="Remove file"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Google Meet Link Section (Optional) */}
