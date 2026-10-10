@@ -41,13 +41,51 @@ serve(async (req) => {
     }
 
     // 2. Parse request payload
-    const { to, name, subject, message, templateType, meetLink, meetButtonText } = await req.json();
+    const { to, name, subject, message, templateType, meetLink, meetButtonText, attachments } = await req.json();
 
     if (!to || !subject || !message) {
       return new Response(JSON.stringify({ error: "Missing required fields (to, subject, message)" }), {
         status: 400,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
+    }
+
+    // Validate optional attachments (base64 content, max 5 files, ~10MB of file data in total)
+    const MAX_ATTACHMENTS = 5;
+    const MAX_BASE64_CHARS = Math.ceil((10 * 1024 * 1024 * 4) / 3) + 1024;
+    let resendAttachments: { filename: string; content: string; content_type?: string }[] = [];
+
+    if (attachments !== undefined && attachments !== null) {
+      if (!Array.isArray(attachments) || attachments.length > MAX_ATTACHMENTS) {
+        return new Response(JSON.stringify({ error: `You can attach up to ${MAX_ATTACHMENTS} files` }), {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      let totalChars = 0;
+      for (const att of attachments) {
+        if (!att || typeof att.filename !== "string" || typeof att.content !== "string" || !att.filename.trim() || !att.content) {
+          return new Response(JSON.stringify({ error: "Invalid attachment (filename and content are required)" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          });
+        }
+        totalChars += att.content.length;
+      }
+      if (totalChars > MAX_BASE64_CHARS) {
+        return new Response(JSON.stringify({ error: "Attachments are too large (max 10 MB in total)" }), {
+          status: 413,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
+      }
+
+      resendAttachments = attachments.map((att: { filename: string; content: string; contentType?: string }) => ({
+        // Strip any path parts from the file name
+        filename: att.filename.split(/[\\/]/).pop()!.trim(),
+        content: att.content,
+        ...(att.contentType ? { content_type: att.contentType } : {}),
+      }));
     }
 
     // 3. Setup Resend
@@ -76,7 +114,7 @@ serve(async (req) => {
 
     const formattedBody = paragraphs
       .map((p: string) => {
-        const isArabic = /[\u0600-\u06FF]/.test(p);
+        const isArabic = new RegExp("[" + String.fromCharCode(0x0600) + "-" + String.fromCharCode(0x06FF) + "]").test(p);
         const dir = isArabic ? "rtl" : "ltr";
         const align = isArabic ? "right" : "left";
         const linkedText = linkify(p);
@@ -134,7 +172,7 @@ serve(async (req) => {
       .map((e: string) => e.trim())
       .filter(Boolean);
 
-    console.log(`Sending custom email to: ${recipientList.join(", ")}`);
+    console.log(`Sending custom email to: ${recipientList.join(", ")} (${resendAttachments.length} attachment(s))`);
 
     const emailRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -147,6 +185,7 @@ serve(async (req) => {
         to: recipientList,
         subject: subject,
         html: htmlContent,
+        ...(resendAttachments.length > 0 ? { attachments: resendAttachments } : {}),
       }),
     });
 
